@@ -6,26 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up()
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->string('order_id')->unique();
+            $table->foreignId('order_id')->constrained()->cascadeOnDelete(); 
             $table->string('name');
             $table->string('email');
             $table->integer('amount');
             $table->string('status')->default('pending'); // pending, paid, failed
             $table->string('snap_token')->nullable();
             $table->timestamps();
+
+            $table->unique('order_id'); 
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('transactions');
