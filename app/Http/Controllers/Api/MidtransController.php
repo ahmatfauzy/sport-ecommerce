@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Midtrans\Config;
@@ -21,23 +22,17 @@ class MidtransController extends Controller
     public function createTransaction(Request $request)
     {
         $request->validate([
+            'order_id' => 'required|exists:orders,id',
             'name' => 'required|string',
             'email' => 'required|email',
-            'amount' => 'required|numeric|min:1000',
         ]);
 
-        $orderId = 'ORDER-' . time();
-        $transaction = Transaction::create([
-            'order_id' => $orderId,
-            'name' => $request->name,
-            'email' => $request->email,
-            'amount' => $request->amount,
-        ]);
+        $order = Order::findOrFail($request->order_id);
 
         $params = [
             'transaction_details' => [
-                'order_id' => $orderId,
-                'gross_amount' => $request->amount,
+                'order_id' => $order->number,
+                'gross_amount' => $order->total_price,
             ],
             'customer_details' => [
                 'first_name' => $request->name,
@@ -46,10 +41,18 @@ class MidtransController extends Controller
         ];
 
         $snapToken = Snap::getSnapToken($params);
-        $transaction->update(['snap_token' => $snapToken]);
+
+        $transaction = Transaction::updateOrCreate(
+            ['order_id' => $order->id],
+            [
+                'name' => $request->name,
+                'email' => $request->email,
+                'amount' => $order->total_price,
+                'snap_token' => $snapToken,
+            ]
+        );
 
         return response()->json([
-            'status' => 'success',
             'snap_token' => $snapToken,
             'transaction' => $transaction,
         ]);
@@ -57,21 +60,24 @@ class MidtransController extends Controller
 
     public function notificationHandler(Request $request)
     {
-        $notification = new \Midtrans\Notification();
+        $notif = new \Midtrans\Notification();
 
-        $transaction = $notification->transaction_status;
-        $orderId = $notification->order_id;
+        $transaction = $notif->transaction_status;
+        $orderNumber = $notif->order_id;
 
-        $transactionModel = Transaction::where('order_id', $orderId)->first();
-
-        if (!$transactionModel) {
-            return response()->json(['status' => 'error', 'message' => 'Transaction not found'], 404);
+        $order = Order::where('number', $orderNumber)->first();
+        if (!$order) {
+            return response()->json(['message' => 'Order not found'], 404);
         }
 
-        if ($transaction == 'capture' || $transaction == 'settlement') {
-            $transactionModel->update(['status' => 'paid']);
-        } elseif ($transaction == 'cancel' || $transaction == 'deny' || $transaction == 'expire') {
-            $transactionModel->update(['status' => 'failed']);
+        $trx = Transaction::where('order_id', $order->id)->first();
+
+        if (in_array($transaction, ['capture', 'settlement'])) {
+            $trx->update(['status' => 'paid']);
+            $order->update(['status' => 'processing']);
+        } elseif (in_array($transaction, ['cancel', 'deny', 'expire'])) {
+            $trx->update(['status' => 'failed']);
+            $order->update(['status' => 'cancelled']);
         }
 
         return response()->json(['status' => 'ok']);
