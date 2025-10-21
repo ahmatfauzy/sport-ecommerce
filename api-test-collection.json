@@ -1,0 +1,441 @@
+{
+    "info": {
+        "name": "Sport-Ecommerce API (FIXED)",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+            }
+        ]
+    },
+    "item": [
+        {
+            "name": "Auth",
+            "item": [
+                {
+                    "name": "Register",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"User Baru\",\n  \"email\": \"userbaru@example.com\",\n  \"password\": \"password\",\n  \"password_confirmation\": \"password\"\n}",
+                            "options": { "raw": { "language": "json" } }
+                        },
+                        "url": "{{baseUrl}}/api/register"
+                    }
+                },
+                {
+                    "name": "Login",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password\"\n}",
+                            "options": { "raw": { "language": "json" } }
+                        },
+                        "url": "{{baseUrl}}/api/login"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Categories (Public)",
+            "item": [
+                {
+                    "name": "List Categories",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": "{{baseUrl}}/api/categories"
+                    }
+                },
+                {
+                    "name": "Single Category",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": "{{baseUrl}}/api/categories/1"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Products (Public)",
+            "item": [
+                {
+                    "name": "List Products",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": "{{baseUrl}}/api/products"
+                    }
+                },
+                {
+                    "name": "Single Product",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": "{{baseUrl}}/api/products/1"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Cart (Auth)",
+            "item": [
+                {
+                    "name": "View Cart",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/api/cart"
+                    }
+                },
+                {
+                    "name": "Add to Cart",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"product_id\": 1,\n  \"quantity\": 2\n}",
+                            "options": { "raw": { "language": "json" } }
+                        },
+                        "url": "{{baseUrl}}/api/cart"
+                    }
+                },
+                {
+                    "name": "Update Cart Qty",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"quantity\": 5\n}",
+                            "options": { "raw": { "language": "json" } }
+                        },
+                        "url": "{{baseUrl}}/api/cart/1"
+                    }
+                },
+                {
+                    "name": "Remove Cart Item",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/api/cart/1"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Order (Auth)",
+            "item": [
+                {
+                    "name": "Checkout",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"shipping_name\": \"Budi Santoso\",\n  \"shipping_address\": \"Jl. Merdeka 123, Jakarta\",\n  \"shipping_phone\": \"081234567890\"\n}",
+                            "options": { "raw": { "language": "json" } }
+                        },
+                        "url": "{{baseUrl}}/api/checkout"
+                    }
+                },
+                {
+                    "name": "My Orders",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/api/orders"
+                    }
+                },
+                {
+                    "name": "Order Detail",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/api/orders/1"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Admin Categories",
+            "item": [
+                {
+                    "name": "Admin List Categories",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{adminToken}}"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/api/admin/categories"
+                    }
+                },
+                {
+                    "name": "Admin Create Category",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{adminToken}}"
+                            },
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Olahraga\",\n  \"slug\": \"olahraga\"\n}",
+                            "options": { "raw": { "language": "json" } }
+                        },
+                        "url": "{{baseUrl}}/api/admin/categories"
+                    }
+                },
+                {
+                    "name": "Admin Update Category",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{adminToken}}"
+                            },
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Sport Outdoor\",\n  \"slug\": \"sport-outdoor\"\n}",
+                            "options": { "raw": { "language": "json" } }
+                        },
+                        "url": "{{baseUrl}}/api/admin/categories/1"
+                    }
+                },
+                {
+                    "name": "Admin Delete Category",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{adminToken}}"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/api/admin/categories/1"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Admin Products",
+            "item": [
+                {
+                    "name": "Admin List Products",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{adminToken}}"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/api/admin/products"
+                    }
+                },
+                {
+                    "name": "Admin Create Product",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{adminToken}}"
+                            },
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"category_id\": 1,\n  \"name\": \"Kaos Olahraga\",\n  \"description\": \"Ringan dan nyaman\",\n  \"price\": 120000,\n  \"stock\": 50,\n  \"images\": [\"https://placeimg.com/640/480/tech\"],\n  \"is_active\": true\n}",
+                            "options": { "raw": { "language": "json" } }
+                        },
+                        "url": "{{baseUrl}}/api/admin/products"
+                    }
+                },
+                {
+                    "name": "Admin Update Product",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{adminToken}}"
+                            },
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Kaos Premium\",\n  \"price\": 150000,\n  \"stock\": 30\n}",
+                            "options": { "raw": { "language": "json" } }
+                        },
+                        "url": "{{baseUrl}}/api/admin/products/1"
+                    }
+                },
+                {
+                    "name": "Admin Delete Product",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{adminToken}}"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/api/admin/products/1"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Midtrans",
+            "item": [
+                {
+                    "name": "Create Snap Token",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"order_id\": 1,\n  \"name\": \"Budi Santoso\",\n  \"email\": \"budi@example.com\"\n}",
+                            "options": { "raw": { "language": "json" } }
+                        },
+                        "url": "{{baseUrl}}/api/midtrans/create"
+                    }
+                },
+                {
+                    "name": "Webhook Notification",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"transaction_status\": \"settlement\",\n  \"order_id\": \"ORD-ABCDEF12\"\n}",
+                            "options": { "raw": { "language": "json" } }
+                        },
+                        "url": "{{baseUrl}}/api/midtrans/notification"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Admin Orders",
+            "item": [
+                {
+                    "name": "List All Orders",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{adminToken}}"
+                            }
+                        ],
+                        "url": "{{baseUrl}}/api/admin/orders"
+                    }
+                },
+                {
+                    "name": "Update Order Status",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{adminToken}}"
+                            },
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"status\": \"shipped\"\n}",
+                            "options": { "raw": { "language": "json" } }
+                        },
+                        "url": "{{baseUrl}}/api/admin/orders/1"
+                    }
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:8000",
+            "type": "string"
+        },
+        {
+            "key": "token",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "adminToken",
+            "value": "",
+            "type": "string"
+        }
+    ]
+}
