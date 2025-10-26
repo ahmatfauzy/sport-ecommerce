@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Api\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Api\Admin\CategoryController as AdminCategoryController;
 use Illuminate\Support\Facades\Route;
 
 /* ---------- PUBLIC ---------- */
@@ -37,6 +38,7 @@ Route::middleware(['auth:sanctum', 'can:admin'])
     ->prefix('admin')
     ->as('admin.')
     ->group(function () {
+        Route::apiResource('categories', AdminCategoryController::class);
         Route::apiResource('orders', AdminOrderController::class)->only(['index', 'show', 'update']);
         Route::apiResource('products', AdminProductController::class);
     });

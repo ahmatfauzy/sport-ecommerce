@@ -3,7 +3,7 @@
 
         <!-- Logo -->
         <a href="/" class="flex items-center space-x-2">
-            <img src="{{ asset('images/17Sports.png') }}" alt="Logo" class="w-28 object-contain">
+            <span class="text-2xl font-bold text-black">SEVENTEEN SPORTS</span>
         </a>
 
         <!-- Menu Desktop -->
@@ -58,10 +58,40 @@
                         class="ml-2 outline-none text-sm bg-transparent w-full transition-all duration-300 h-6">
                 </div>
             </div>
-            <a href="/login"
-                class="bg-black text-white px-4 py-1.5 rounded-full text-sm font-semibold hover:bg-gray-800 transition">Login</a>
-            <a href="/register"
-                class="border border-black text-black px-4 py-1.5 rounded-full text-sm font-semibold hover:bg-black hover:text-white transition">Daftar</a>
+            
+            @auth
+                <!-- User Menu -->
+                <div class="relative" id="user-menu">
+                    <button id="user-menu-button" class="flex items-center space-x-2 text-black hover:text-gray-600 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        <span class="text-sm font-medium">{{ Auth::user()->name }}</span>
+                        <svg id="dropdown-arrow" class="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    
+                    <!-- Dropdown Menu -->
+                    <div id="user-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 opacity-0 invisible transition-all duration-200">
+                        @if(Auth::user()->role === 'admin')
+                        <a href="/admin/dashboard" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard Admin</a>
+                        @endif
+                        <a href="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                        <a href="/orders" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Pesanan Saya</a>
+                        <form method="POST" action="/logout" class="block">
+                            @csrf
+                            <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
+                        </form>
+                    </div>
+                </div>
+            @else
+                <a href="/login"
+                    class="bg-black text-white px-4 py-1.5 rounded-full text-sm font-semibold hover:bg-gray-800 transition">Login</a>
+                <a href="/register"
+                    class="border border-black text-black px-4 py-1.5 rounded-full text-sm font-semibold hover:bg-black hover:text-white transition">Daftar</a>
+            @endauth
+            
             <a href='/keranjang'
                 class="border border-gray-300 rounded-full p-2 shadow-sm hover:bg-gray-100 transition focus:outline-none">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-black" fill="none" viewBox="0 0 24 24"
@@ -95,10 +125,24 @@
 
             {{-- Tombol Auth & Cart untuk Mobile --}}
             <div class="pt-4 border-t border-gray-200 flex flex-col space-y-3">
-                <a href="/login"
-                    class="bg-black text-white px-5 py-2 rounded-full text-center text-sm font-semibold hover:bg-gray-800 transition">Login</a>
-                <a href="/register"
-                    class="border border-black text-black px-5 py-2 rounded-full text-center text-sm font-semibold hover:bg-black hover:text-white transition">Daftar</a>
+                @auth
+                    <div class="px-5 py-2 text-center text-sm font-medium text-gray-700">
+                        Halo, {{ Auth::user()->name }}!
+                    </div>
+                    <a href="/profile"
+                        class="border border-gray-300 text-black px-5 py-2 rounded-full text-center text-sm font-semibold hover:bg-gray-100 transition">Profile</a>
+                    <a href="/orders"
+                        class="border border-gray-300 text-black px-5 py-2 rounded-full text-center text-sm font-semibold hover:bg-gray-100 transition">Pesanan Saya</a>
+                    <form method="POST" action="/logout" class="block">
+                        @csrf
+                        <button type="submit" class="w-full bg-red-600 text-white px-5 py-2 rounded-full text-center text-sm font-semibold hover:bg-red-700 transition">Logout</button>
+                    </form>
+                @else
+                    <a href="/login"
+                        class="bg-black text-white px-5 py-2 rounded-full text-center text-sm font-semibold hover:bg-gray-800 transition">Login</a>
+                    <a href="/register"
+                        class="border border-black text-black px-5 py-2 rounded-full text-center text-sm font-semibold hover:bg-black hover:text-white transition">Daftar</a>
+                @endauth
                 
                 {{-- PERUBAHAN: Tombol Keranjang Ditambahkan di Mobile --}}
                 <a href="/keranjang"
@@ -150,6 +194,40 @@
                 });
             } else {
                 console.error('Elemen menu mobile atau burger lines tidak ditemukan.');
+            }
+
+            // --- SCRIPT: User Dropdown Menu ---
+            const userMenuButton = document.getElementById('user-menu-button');
+            const userDropdown = document.getElementById('user-dropdown');
+            const dropdownArrow = document.getElementById('dropdown-arrow');
+
+            if (userMenuButton && userDropdown && dropdownArrow) {
+                userMenuButton.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    
+                    const isOpen = userDropdown.classList.contains('opacity-100');
+                    
+                    if (isOpen) {
+                        // Tutup dropdown
+                        userDropdown.classList.remove('opacity-100', 'visible');
+                        userDropdown.classList.add('opacity-0', 'invisible');
+                        dropdownArrow.classList.remove('rotate-180');
+                    } else {
+                        // Buka dropdown
+                        userDropdown.classList.remove('opacity-0', 'invisible');
+                        userDropdown.classList.add('opacity-100', 'visible');
+                        dropdownArrow.classList.add('rotate-180');
+                    }
+                });
+
+                // Tutup dropdown saat klik di luar
+                document.addEventListener('click', (e) => {
+                    if (!userMenuButton.contains(e.target) && !userDropdown.contains(e.target)) {
+                        userDropdown.classList.remove('opacity-100', 'visible');
+                        userDropdown.classList.add('opacity-0', 'invisible');
+                        dropdownArrow.classList.remove('rotate-180');
+                    }
+                });
             }
 
             // --- SCRIPT: Animasi Navbar Scroll ---

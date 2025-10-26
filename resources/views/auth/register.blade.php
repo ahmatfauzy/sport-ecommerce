@@ -40,7 +40,7 @@
             </div>
 
             {{-- Form Register --}}
-            <form class="space-y-5" action="/" method="POST"> {{-- Belum selesai --}} 
+            <form class="space-y-5" action="/register" method="POST"> 
                 @csrf {{-- Token CSRF Laravel --}}
 
                 {{-- Input Nama --}}
@@ -89,9 +89,9 @@
                 </div>
 
                 {{-- Persetujuan Syarat & Ketentuan --}}
-                <div class.flex items-start">
-                    <div class.flex items-center h-5">
-                        <input id.terms" name="terms" type="checkbox" required
+                <div class="flex items-start">
+                    <div class="flex items-center h-5">
+                        <input id="terms" name="terms" type="checkbox" required
                             class="h-4 w-4 text-black focus:ring-black border-gray-300 rounded">
                     </div>
                     <div class="ml-3 text-sm">
