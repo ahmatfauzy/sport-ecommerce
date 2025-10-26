@@ -24,7 +24,7 @@
                     </h1>
                     
                     <p class="text-lg md:text-xl text-gray-600 max-w-lg">
-                        Temukan gaya terbaikmu dengan koleksi sportswear terbaik. Cocok untuk aktivitas olahraga, jogging, dan lainnya.
+                        Temukan gaya terbaikmu dengan koleksi peralatan olahraga terbaik. Cocok untuk aktivitas olahraga, jogging, dan lainnya.
                     </p>
                     
                     {{-- CTA Buttons --}}
@@ -308,14 +308,14 @@
             <div class="max-w-5xl mx-auto px-6">
                 <div class="bg-white text-black p-12 md:p-16 rounded-2xl shadow-xl text-center" data-aos="zoom-in">
                     <h2 class="text-3xl md:text-4xl font-bold mb-4">
-                        Sportswear Terbaik untuk Setiap Gaya
+                        Peralatan olahraga Terbaik untuk Setiap Gaya
                     </h2>
                     <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-                        Temukan koleksi sportswear terbaru dengan desain elegan, kualitas terbaik, dan harga terjangkau.
+                        Temukan koleksi peralatan olahraga terbaru dengan desain elegan, kualitas terbaik, dan harga terjangkau.
                     </p>
                     <a href="/produk"
                         class="inline-flex items-center justify-center px-8 py-4 bg-black text-white font-semibold rounded-lg shadow-md hover:bg-gray-800 transition text-lg">
-                        Lihat Sportswear
+                        Lihat peralatan olahraga
                         <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>

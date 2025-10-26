@@ -48,7 +48,7 @@
                     <span class="text-xl font-bold">Seventeen Sports</span>
                 </div>
                 <p class="text-gray-300 text-sm leading-relaxed">
-                    Toko sportswear online terpercaya yang menyediakan berbagai macam sportswear dengan desain elegan, kualitas terbaik, dan harga terjangkau.
+                    Toko peralatan olahraga online terpercaya yang menyediakan berbagai macam peralatan olahraga dengan desain elegan, kualitas terbaik, dan harga terjangkau.
                 </p>
 
                 <!-- Ikon Sosial Media -->
