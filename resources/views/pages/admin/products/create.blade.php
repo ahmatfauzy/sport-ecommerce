@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
 <div class="bg-gray-100 pt-24 pb-16 min-h-screen">

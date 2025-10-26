@@ -29,35 +29,22 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    @php
-                        $categories = [
-                            ['id' => 1, 'name' => 'Sepatu Lari', 'slug' => 'sepatu-lari', 'products_count' => 15, 'created_at' => '2024-01-15'],
-                            ['id' => 2, 'name' => 'Sepatu Basket', 'slug' => 'sepatu-basket', 'products_count' => 8, 'created_at' => '2024-01-16'],
-                            ['id' => 3, 'name' => 'Pakaian Olahraga', 'slug' => 'pakaian-olahraga', 'products_count' => 25, 'created_at' => '2024-01-17'],
-                            ['id' => 4, 'name' => 'Aksesoris', 'slug' => 'aksesoris', 'products_count' => 12, 'created_at' => '2024-01-18'],
-                            ['id' => 5, 'name' => 'Alat Fitness', 'slug' => 'alat-fitness', 'products_count' => 20, 'created_at' => '2024-01-19'],
-                        ];
-                    @endphp
-                    
-                    @foreach($categories as $category)
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $category['id'] }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">{{ $category['name'] }}</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $category['slug'] }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $category['products_count'] }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $category['created_at'] }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <button onclick="openEditModal({{ $category['id'] }}, '{{ $category['name'] }}', '{{ $category['slug'] }}')" class="text-blue-600 hover:text-blue-900 mr-3">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button onclick="deleteCategory({{ $category['id'] }})" class="text-red-600 hover:text-red-900">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                    {{-- TODO: Replace with actual categories from database --}}
+                    <tr>
+                        <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+                            <div class="flex flex-col items-center">
+                                <svg class="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                                </svg>
+                                <p class="text-lg font-medium text-gray-900 mb-2">Belum ada kategori</p>
+                                <p class="text-gray-600 mb-4">Mulai dengan menambahkan kategori pertama Anda</p>
+                                <button onclick="openCreateModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center">
+                                    <i class="fas fa-plus mr-2"></i>
+                                    Tambah Kategori Pertama
+                                </button>
+                            </div>
                         </td>
                     </tr>
-                    @endforeach
                 </tbody>
             </table>
         </div>

@@ -51,12 +51,12 @@
                             Orders
                         </a>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a href="/admin/users" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-lg transition">
                             <i class="fas fa-users mr-3"></i>
                             Users
                         </a>
-                    </li>
+                    </li> -->
                 </ul>
             </nav>
             

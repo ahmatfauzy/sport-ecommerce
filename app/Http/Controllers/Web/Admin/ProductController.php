@@ -8,13 +8,14 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('can:admin');
+        $this->middleware('admin');
     }
 
     public function index()

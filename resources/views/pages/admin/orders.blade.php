@@ -56,51 +56,18 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    @php
-                        $orders = [
-                            ['id' => 'ORD-001', 'customer' => 'Budi Santoso', 'items' => 3, 'total' => 2450000, 'status' => 'pending', 'date' => '2024-01-20'],
-                            ['id' => 'ORD-002', 'customer' => 'Citra Lestari', 'items' => 1, 'total' => 1899000, 'status' => 'processing', 'date' => '2024-01-19'],
-                            ['id' => 'ORD-003', 'customer' => 'Ahmad Yusuf', 'items' => 2, 'total' => 800000, 'status' => 'shipped', 'date' => '2024-01-18'],
-                            ['id' => 'ORD-004', 'customer' => 'Sari Dewi', 'items' => 4, 'total' => 1200000, 'status' => 'delivered', 'date' => '2024-01-17'],
-                            ['id' => 'ORD-005', 'customer' => 'Rudi Hartono', 'items' => 1, 'total' => 550000, 'status' => 'cancelled', 'date' => '2024-01-16'],
-                        ];
-                    @endphp
-                    
-                    @foreach($orders as $order)
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">{{ $order['id'] }}</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">{{ $order['customer'] }}</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $order['items'] }} items</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Rp {{ number_format($order['total'], 0, ',', '.') }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            @php
-                                $statusColors = [
-                                    'pending' => 'bg-yellow-100 text-yellow-800',
-                                    'processing' => 'bg-blue-100 text-blue-800',
-                                    'shipped' => 'bg-purple-100 text-purple-800',
-                                    'delivered' => 'bg-green-100 text-green-800',
-                                    'cancelled' => 'bg-red-100 text-red-800'
-                                ];
-                            @endphp
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $statusColors[$order['status']] }}">
-                                {{ ucfirst($order['status']) }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $order['date'] }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <button onclick="viewOrder('{{ $order['id'] }}')" class="text-blue-600 hover:text-blue-900 mr-3">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button onclick="updateOrderStatus('{{ $order['id'] }}')" class="text-green-600 hover:text-green-900">
-                                <i class="fas fa-edit"></i>
-                            </button>
+                    {{-- TODO: Replace with actual orders from database --}}
+                    <tr>
+                        <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+                            <div class="flex flex-col items-center">
+                                <svg class="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                </svg>
+                                <p class="text-lg font-medium text-gray-900 mb-2">Belum ada pesanan</p>
+                                <p class="text-gray-600">Pesanan pelanggan akan muncul di sini</p>
+                            </div>
                         </td>
                     </tr>
-                    @endforeach
                 </tbody>
             </table>
         </div>

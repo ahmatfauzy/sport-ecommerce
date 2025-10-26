@@ -1,43 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
-    {{-- Dummy Data untuk Item Keranjang --}}
     @php
-        $cartItems = [
-            [
-                'id' => 1,
-                'nama' => 'Nike Air Zoom Pegasus 39',
-                'img_url' => 'https://placehold.co/100x100/EBF8FF/3182CE?text=Nike',
-                'harga_angka' => 1899000,
-                'harga_tampil' => 'Rp 1.899.000',
-                'kuantitas' => 1,
-            ],
-            [
-                'id' => 2,
-                'nama' => 'Jersey Basket Pro DryFit',
-                'img_url' => 'https://placehold.co/100x100/FFF5EB/DD6B20?text=Jersey',
-                'harga_angka' => 450000,
-                'harga_tampil' => 'Rp 450.000',
-                'kuantitas' => 2,
-            ],
-             [
-                'id' => 3,
-                'nama' => 'Bola Basket Indoor Pro',
-                'img_url' => 'https://placehold.co/100x100/FAF5FF/805AD5?text=Bola',
-                'harga_angka' => 320000,
-                'harga_tampil' => 'Rp 320.000',
-                'kuantitas' => 1,
-            ],
-        ];
-
-        // Hitung Subtotal
+        // Get cart items from authenticated user
+        $cartItems = [];
         $subtotal = 0;
-        foreach ($cartItems as $item) {
-            $subtotal += $item['harga_angka'] * $item['kuantitas'];
-        }
-        $ongkir = 15000; // Contoh Ongkir
+        $ongkir = 15000; // Default shipping cost
         $total = $subtotal + $ongkir;
-
+        
+        if (Auth::check()) {
+            // TODO: Implement cart functionality with database
+            // For now, show empty cart
+        }
     @endphp
 
     {{-- Container utama halaman keranjang --}}

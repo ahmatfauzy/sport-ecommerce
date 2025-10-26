@@ -200,30 +200,21 @@
                     
                     <!-- Order Items -->
                     <div class="space-y-3 mb-6">
-                        @php
-                            $orderItems = [
-                                ['name' => 'Nike Air Zoom Pegasus 39', 'qty' => 1, 'price' => 1899000, 'image' => 'https://placehold.co/60x60/EBF8FF/3182CE?text=Nike'],
-                                ['name' => 'Jersey Basket Pro DryFit', 'qty' => 2, 'price' => 450000, 'image' => 'https://placehold.co/60x60/FFF5EB/DD6B20?text=Jersey'],
-                            ];
-                        @endphp
-                        
-                        @foreach($orderItems as $item)
-                        <div class="flex items-center space-x-3">
-                            <img src="{{ $item['image'] }}" alt="{{ $item['name'] }}" class="w-12 h-12 object-cover rounded">
-                            <div class="flex-1">
-                                <h3 class="text-sm font-medium text-gray-900">{{ $item['name'] }}</h3>
-                                <p class="text-sm text-gray-600">Qty: {{ $item['qty'] }}</p>
-                            </div>
-                            <span class="text-sm font-semibold text-gray-900">Rp {{ number_format($item['price'] * $item['qty'], 0, ',', '.') }}</span>
+                        {{-- TODO: Replace with actual cart items from database --}}
+                        <div class="text-center py-8 text-gray-500">
+                            <svg class="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 7h13l-1.5-7M9 21a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z"></path>
+                            </svg>
+                            <p class="text-lg font-medium text-gray-900 mb-2">Keranjang Kosong</p>
+                            <p class="text-gray-600">Tambahkan produk ke keranjang untuk melanjutkan checkout</p>
                         </div>
-                        @endforeach
                     </div>
                     
                     <!-- Order Totals -->
                     <div class="space-y-2 border-t pt-4">
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-600">Subtotal</span>
-                            <span class="font-medium">Rp 2.799.000</span>
+                            <span class="font-medium">Rp 0</span>
                         </div>
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-600">Shipping</span>
@@ -235,8 +226,8 @@
                         </div>
                         <div class="flex justify-between text-lg font-semibold border-t pt-2">
                             <span>Total</span>
-                            <span id="total-cost">Rp 2.814.000</span>
-                                </div>
+                            <span id="total-cost">Rp 15.000</span>
+                        </div>
                             </div>
 
                     <!-- Promo Code -->

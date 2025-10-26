@@ -8,6 +8,9 @@ use App\Http\Controllers\Web\ProfileController;
 use App\Http\Controllers\Web\OrderController;
 use App\Http\Controllers\Web\Admin\DashboardController;
 use App\Http\Controllers\Web\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Web\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Web\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Web\Admin\UserController as AdminUserController;
 use Illuminate\Support\Facades\Route;
 
 // Homepage
@@ -37,16 +40,15 @@ Route::middleware('auth')->group(function () {
 });
 
 // Admin routes
-Route::middleware(['auth', 'can:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::resource('products', AdminProductController::class);
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::resource('products', AdminProductController::class);
+        Route::resource('categories', AdminCategoryController::class);
+        Route::resource('orders', AdminOrderController::class)->only(['index', 'show', 'update']);
+        Route::resource('users', AdminUserController::class);
 });
 
-// Other pages (you can add controllers for these later)
-Route::get('/tentang', function () {
-    return view('pages.about');
-})->name('about');
-
+// Other pages
 Route::get('/keranjang', function () {
     return view('pages.cart');
 })->name('cart');
@@ -54,3 +56,11 @@ Route::get('/keranjang', function () {
 Route::get('/checkout', function () {
     return view('pages.checkout');
 })->name('checkout');
+
+Route::get('/payment', function () {
+    return view('pages.payment');
+})->name('payment');
+
+Route::get('/tentang', function () {
+    return view('pages.about');
+})->name('about');

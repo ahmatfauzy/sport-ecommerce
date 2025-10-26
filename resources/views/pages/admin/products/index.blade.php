@@ -1,7 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
-<div class="bg-gray-100 pt-24 pb-16 min-h-screen">
+<div class="bg-gray-100 pt-2 pb-16 min-h-screen">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <!-- Header -->

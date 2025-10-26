@@ -64,47 +64,22 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    @php
-                        $products = [
-                            ['id' => 1, 'name' => 'Nike Air Zoom Pegasus 39', 'category' => 'Sepatu Lari', 'price' => 1899000, 'stock' => 15, 'status' => 'active', 'image' => 'https://placehold.co/60x60/EBF8FF/3182CE?text=Nike'],
-                            ['id' => 2, 'name' => 'Adidas Ultraboost Light', 'category' => 'Sepatu Lari', 'price' => 2500000, 'stock' => 8, 'status' => 'active', 'image' => 'https://placehold.co/60x60/E6FFFA/38B2AC?text=Adidas'],
-                            ['id' => 3, 'name' => 'Jersey Basket Lakers', 'category' => 'Pakaian Olahraga', 'price' => 550000, 'stock' => 25, 'status' => 'active', 'image' => 'https://placehold.co/60x60/FAF5FF/805AD5?text=Jersey'],
-                            ['id' => 4, 'name' => 'Dumbbell Set 10kg', 'category' => 'Alat Fitness', 'price' => 350000, 'stock' => 0, 'status' => 'inactive', 'image' => 'https://placehold.co/60x60/F7FAFC/718096?text=Dumbbell'],
-                            ['id' => 5, 'name' => 'Yoga Mat Premium', 'category' => 'Alat Fitness', 'price' => 250000, 'stock' => 12, 'status' => 'active', 'image' => 'https://placehold.co/60x60/F0FFF4/38A169?text=Yoga'],
-                        ];
-                    @endphp
-                    
-                    @foreach($products as $product)
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <img src="{{ $product['image'] }}" alt="{{ $product['name'] }}" class="w-12 h-12 rounded-lg object-cover">
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-gray-900">{{ $product['name'] }}</div>
-                            <div class="text-sm text-gray-500">ID: {{ $product['id'] }}</div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $product['category'] }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Rp {{ number_format($product['price'], 0, ',', '.') }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $product['stock'] > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                {{ $product['stock'] }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $product['status'] === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                {{ ucfirst($product['status']) }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <button onclick="openEditModal({{ $product['id'] }})" class="text-blue-600 hover:text-blue-900 mr-3">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button onclick="deleteProduct({{ $product['id'] }})" class="text-red-600 hover:text-red-900">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                    {{-- TODO: Replace with actual products from database --}}
+                    <tr>
+                        <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+                            <div class="flex flex-col items-center">
+                                <svg class="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                                </svg>
+                                <p class="text-lg font-medium text-gray-900 mb-2">Belum ada produk</p>
+                                <p class="text-gray-600 mb-4">Mulai dengan menambahkan produk pertama Anda</p>
+                                <button onclick="openCreateModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center">
+                                    <i class="fas fa-plus mr-2"></i>
+                                    Tambah Produk Pertama
+                                </button>
+                            </div>
                         </td>
                     </tr>
-                    @endforeach
                 </tbody>
             </table>
         </div>
@@ -252,4 +227,5 @@
     });
 </script>
 @endpush
+
 @endsection
