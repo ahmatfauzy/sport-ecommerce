@@ -106,7 +106,7 @@
                                 </a>
                                 {{-- Tombol Tambah ke Keranjang --}}
                                 <div class="px-4 pb-4">
-                                     <button class="w-full bg-black text-white py-2 px-4 rounded-lg text-sm font-semibold hover:bg-gray-800 transition duration-300 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0">
+                                     <button onclick="addToCart({{ $product->id }}, 1)" class="w-full bg-black text-white py-2 px-4 rounded-lg text-sm font-semibold hover:bg-gray-800 transition duration-300 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0">
                                          Tambah ke Keranjang
                                     </button>
                                 </div>
@@ -133,6 +133,39 @@
 
     @push('scripts')
     <script>
+        async function addToCart(productId, quantity) {
+            @auth
+                try {
+                    const response = await fetch('/keranjang', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            product_id: productId,
+                            quantity: quantity
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok && data.success) {
+                        alert('Produk berhasil ditambahkan ke keranjang!');
+                    } else {
+                        alert('Error: ' + (data.message || 'Gagal menambahkan produk ke keranjang'));
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan saat menambahkan produk ke keranjang');
+                }
+            @else
+                alert('Silakan login terlebih dahulu untuk menambahkan produk ke keranjang');
+                window.location.href = '/login';
+            @endauth
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
             const applyFiltersBtn = document.getElementById('apply-filters');
             const clearFiltersBtn = document.getElementById('clear-filters');

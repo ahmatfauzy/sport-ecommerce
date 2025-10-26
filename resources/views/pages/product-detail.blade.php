@@ -513,28 +513,77 @@
         }
     }
 
-    function addToCart() {
-        const quantity = document.getElementById('quantity').value;
-        console.log('Add to cart:', {
-            product: '{{ $product->name }}',
-            productId: {{ $product->id }},
-            size: selectedSize,
-            color: selectedColor,
-            quantity: quantity
-        });
-        // Implement add to cart functionality
+    async function addToCart() {
+        @auth
+            const quantity = document.getElementById('quantity').value;
+            
+            try {
+                const response = await fetch('/keranjang', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        product_id: {{ $product->id }},
+                        quantity: parseInt(quantity)
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    alert('Produk berhasil ditambahkan ke keranjang!');
+                    // Optionally redirect to cart page
+                    // window.location.href = '/keranjang';
+                } else {
+                    alert('Error: ' + (data.message || 'Gagal menambahkan produk ke keranjang'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat menambahkan produk ke keranjang');
+            }
+        @else
+            alert('Silakan login terlebih dahulu untuk menambahkan produk ke keranjang');
+            window.location.href = '/login';
+        @endauth
     }
 
-    function buyNow() {
-        const quantity = document.getElementById('quantity').value;
-        console.log('Buy now:', {
-            product: '{{ $product->name }}',
-            productId: {{ $product->id }},
-            size: selectedSize,
-            color: selectedColor,
-            quantity: quantity
-        });
-        // Implement buy now functionality
+    async function buyNow() {
+        @auth
+            const quantity = document.getElementById('quantity').value;
+            
+            try {
+                const response = await fetch('/keranjang', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        product_id: {{ $product->id }},
+                        quantity: parseInt(quantity)
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    // Redirect to checkout immediately
+                    window.location.href = '/checkout';
+                } else {
+                    alert('Error: ' + (data.message || 'Gagal menambahkan produk'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan');
+            }
+        @else
+            alert('Silakan login terlebih dahulu');
+            window.location.href = '/login';
+        @endauth
     }
 
     function switchTab(tabName) {

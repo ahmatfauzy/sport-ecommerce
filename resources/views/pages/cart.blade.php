@@ -2,16 +2,12 @@
 
 @section('content')
     @php
-        // Get cart items from authenticated user
-        $cartItems = [];
-        $subtotal = 0;
+        // Calculate totals
+        $subtotal = $cartItems->sum(function($item) {
+            return $item->product->price * $item->quantity;
+        });
         $ongkir = 15000; // Default shipping cost
         $total = $subtotal + $ongkir;
-        
-        if (Auth::check()) {
-            // TODO: Implement cart functionality with database
-            // For now, show empty cart
-        }
     @endphp
 
     {{-- Container utama halaman keranjang --}}
@@ -31,30 +27,30 @@
                     {{-- Daftar Item Keranjang (Kolom Kiri - Span 2) --}}
                     <section class="lg:col-span-2 space-y-4 mb-8 lg:mb-0" data-aos="fade-right">
                         @foreach ($cartItems as $item)
-                            <div class="bg-white p-4 rounded-lg shadow-md flex items-start space-x-4 cart-item" data-id="{{ $item['id'] }}" data-price="{{ $item['harga_angka'] }}">
+                            <div class="bg-white p-4 rounded-lg shadow-md flex items-start space-x-4 cart-item" data-id="{{ $item->id }}" data-price="{{ $item->product->price }}">
                                 {{-- Gambar Produk --}}
-                                <img src="{{ $item['img_url'] }}" alt="{{ $item['nama'] }}" class="w-20 h-20 object-cover rounded flex-shrink-0">
+                                <img src="{{ $item->product->images[0] ?? 'https://via.placeholder.com/80x80' }}" alt="{{ $item->product->name }}" class="w-20 h-20 object-cover rounded flex-shrink-0">
 
                                 {{-- Info Produk & Kuantitas --}}
                                 <div class="flex-grow">
-                                    <h2 class="font-semibold text-gray-800">{{ $item['nama'] }}</h2>
-                                    <p class="text-sm text-gray-500 mb-2">{{ $item['harga_tampil'] }}</p>
+                                    <h2 class="font-semibold text-gray-800">{{ $item->product->name }}</h2>
+                                    <p class="text-sm text-gray-500 mb-2">Rp {{ number_format($item->product->price, 0, ',', '.') }}</p>
 
                                     {{-- Kontrol Kuantitas --}}
                                     <div class="flex items-center border border-gray-200 rounded w-fit">
-                                        <button onclick="adjustCartQuantity({{ $item['id'] }}, -1)" class="px-3 py-1 text-gray-600 hover:bg-gray-100 focus:outline-none">-</button>
-                                        <input id="quantity-{{ $item['id'] }}" type="number" value="{{ $item['kuantitas'] }}" min="1" class="w-12 text-center border-l border-r border-gray-200 focus:outline-none focus:ring-0 text-sm quantity-input" readonly>
-                                        <button onclick="adjustCartQuantity({{ $item['id'] }}, 1)" class="px-3 py-1 text-gray-600 hover:bg-gray-100 focus:outline-none">+</button>
+                                        <button onclick="adjustCartQuantity({{ $item->id }}, -1)" class="px-3 py-1 text-gray-600 hover:bg-gray-100 focus:outline-none">-</button>
+                                        <input id="quantity-{{ $item->id }}" type="number" value="{{ $item->quantity }}" min="1" class="w-12 text-center border-l border-r border-gray-200 focus:outline-none focus:ring-0 text-sm quantity-input" readonly>
+                                        <button onclick="adjustCartQuantity({{ $item->id }}, 1)" class="px-3 py-1 text-gray-600 hover:bg-gray-100 focus:outline-none">+</button>
                                     </div>
                                 </div>
 
                                 {{-- Harga Total Item & Tombol Hapus --}}
                                 <div class="text-right flex-shrink-0">
-                                    <p id="total-price-{{ $item['id'] }}" class="font-semibold text-gray-800 mb-2 item-total-price">Rp {{ number_format($item['harga_angka'] * $item['kuantitas'], 0, ',', '.') }}</p>
-                                    <button class="text-red-500 hover:text-red-700 text-xs font-medium focus:outline-none">
+                                    <p id="total-price-{{ $item->id }}" class="font-semibold text-gray-800 mb-2 item-total-price">Rp {{ number_format($item->product->price * $item->quantity, 0, ',', '.') }}</p>
+                                    <button onclick="removeFromCart({{ $item->id }})" class="text-red-500 hover:text-red-700 text-xs font-medium focus:outline-none">
                                         <svg class="w-4 h-4 inline-block mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" /></svg>
                                         Hapus
-                                    </button> {{-- Tambahkan event listener JS untuk menghapus --}}
+                                    </button>
                                 </div>
                             </div>
                         @endforeach
@@ -134,29 +130,73 @@
             }
 
             // Fungsi ubah kuantitas item
-            function adjustCartQuantity(itemId, amount) {
+            async function adjustCartQuantity(itemId, amount) {
                 const quantityInput = document.getElementById(`quantity-${itemId}`);
                 const totalPriceElement = document.getElementById(`total-price-${itemId}`);
                 const itemElement = quantityInput.closest('.cart-item');
                 const pricePerItem = parseFloat(itemElement.dataset.price);
-
 
                 if (quantityInput && totalPriceElement) {
                     let currentValue = parseInt(quantityInput.value);
                     currentValue += amount;
                     if (currentValue < 1) {
                         currentValue = 1; 
+                        return;
                     }
-                    quantityInput.value = currentValue;
-
-                    // Update harga total item
-                    const newItemTotalPrice = pricePerItem * currentValue;
-                    totalPriceElement.textContent = formatRupiah(newItemTotalPrice);
-
-
-                    // Update ringkasan
-                    updateCartSummary();
-
+                    
+                    try {
+                        const response = await fetch(`/keranjang/${itemId}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                quantity: currentValue
+                            })
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (response.ok && data.success) {
+                            quantityInput.value = currentValue;
+                            const newItemTotalPrice = pricePerItem * currentValue;
+                            totalPriceElement.textContent = formatRupiah(newItemTotalPrice);
+                            updateCartSummary();
+                        } else {
+                            console.error('Error:', data.message);
+                        }
+                    } catch (error) {
+                        console.error('Error updating cart:', error);
+                    }
+                }
+            }
+            
+            async function removeFromCart(itemId) {
+                if (!confirm('Apakah Anda yakin ingin menghapus item ini dari keranjang?')) {
+                    return;
+                }
+                
+                try {
+                    const response = await fetch(`/keranjang/${itemId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok && data.success) {
+                        location.reload();
+                    } else {
+                        alert('Gagal menghapus item dari keranjang: ' + (data.message || 'Unknown error'));
+                    }
+                } catch (error) {
+                    console.error('Error removing from cart:', error);
+                    alert('Terjadi kesalahan');
                 }
             }
              // Panggil updateCartSummary saat halaman dimuat jika ada item

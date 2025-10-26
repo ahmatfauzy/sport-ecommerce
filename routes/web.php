@@ -6,6 +6,9 @@ use App\Http\Controllers\Web\CategoryController;
 use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\ProfileController;
 use App\Http\Controllers\Web\OrderController;
+use App\Http\Controllers\Web\CartController;
+use App\Http\Controllers\Web\CheckoutController;
+use App\Http\Controllers\Web\PaymentController;
 use App\Http\Controllers\Web\Admin\DashboardController;
 use App\Http\Controllers\Web\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Web\Admin\CategoryController as AdminCategoryController;
@@ -48,18 +51,20 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::resource('users', AdminUserController::class);
 });
 
-// Other pages
-Route::get('/keranjang', function () {
-    return view('pages.cart');
-})->name('cart');
+// Cart
+Route::middleware('auth')->group(function () {
+    Route::get('/keranjang', [CartController::class, 'index'])->name('cart');
+    Route::post('/keranjang', [CartController::class, 'store'])->name('cart.store');
+    Route::put('/keranjang/{cart}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/keranjang/{cart}', [CartController::class, 'destroy'])->name('cart.destroy');
+});
 
-Route::get('/checkout', function () {
-    return view('pages.checkout');
-})->name('checkout');
-
-Route::get('/payment', function () {
-    return view('pages.payment');
-})->name('payment');
+// Checkout & Payment
+Route::middleware('auth')->group(function () {
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::get('/payment', [PaymentController::class, 'index'])->name('payment');
+});
 
 Route::get('/tentang', function () {
     return view('pages.about');
