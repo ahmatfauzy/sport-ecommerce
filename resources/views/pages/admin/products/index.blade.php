@@ -44,7 +44,7 @@
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 h-12 w-12">
                                         <img class="h-12 w-12 rounded-lg object-cover" 
-                                             src="{{ $product->images[0] ?? 'https://via.placeholder.com/48x48' }}" 
+                                             src="{{ $product->image_url }}" 
                                              alt="{{ $product->name }}">
                                     </div>
                                     <div class="ml-4">

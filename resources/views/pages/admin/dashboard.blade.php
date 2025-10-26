@@ -123,7 +123,7 @@
                             <p class="text-sm text-gray-600">{{ $order->user->name ?? 'Guest' }}</p>
                         </div>
                         <div class="text-right">
-                            <p class="font-medium text-gray-900">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</p>
+                            <p class="font-medium text-gray-900">Rp {{ number_format($order->total_price, 0, ',', '.') }}</p>
                             <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
                                 @if($order->status === 'pending') bg-yellow-100 text-yellow-800
                                 @elseif($order->status === 'processing') bg-blue-100 text-blue-800

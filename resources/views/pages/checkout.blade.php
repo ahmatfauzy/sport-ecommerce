@@ -145,7 +145,7 @@
                     <div class="space-y-3 mb-6 max-h-96 overflow-y-auto">
                         @foreach($cartItems as $item)
                         <div class="flex items-center space-x-3">
-                            <img src="{{ $item->product->images[0] ?? 'https://via.placeholder.com/80x80' }}" 
+                            <img src="{{ $item->product->image_url }}" 
                                  alt="{{ $item->product->name }}" 
                                  class="w-16 h-16 object-cover rounded">
                             <div class="flex-1">

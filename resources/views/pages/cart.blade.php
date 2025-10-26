@@ -29,7 +29,7 @@
                         @foreach ($cartItems as $item)
                             <div class="bg-white p-4 rounded-lg shadow-md flex items-start space-x-4 cart-item" data-id="{{ $item->id }}" data-price="{{ $item->product->price }}">
                                 {{-- Gambar Produk --}}
-                                <img src="{{ $item->product->images[0] ?? 'https://via.placeholder.com/80x80' }}" alt="{{ $item->product->name }}" class="w-20 h-20 object-cover rounded flex-shrink-0">
+                                <img src="{{ $item->product->image_url }}" alt="{{ $item->product->name }}" class="w-20 h-20 object-cover rounded flex-shrink-0">
 
                                 {{-- Info Produk & Kuantitas --}}
                                 <div class="flex-grow">

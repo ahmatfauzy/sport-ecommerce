@@ -47,11 +47,11 @@
                 <!-- Order Items -->
                 <div class="bg-white rounded-lg shadow-lg p-6">
                     <h2 class="text-xl font-semibold text-gray-900 mb-4">Item Pesanan</h2>
-                    @if($order->orderItems && $order->orderItems->count() > 0)
+                    @if($order->items && $order->items->count() > 0)
                         <div class="space-y-4">
-                            @foreach($order->orderItems as $item)
+                            @foreach($order->items as $item)
                             <div class="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg">
-                                <img src="{{ $item->product->images[0] ?? 'https://via.placeholder.com/80x80' }}" 
+                                <img src="{{ $item->product->image_url }}" 
                                      alt="{{ $item->product->name }}" 
                                      class="w-20 h-20 object-cover rounded-lg">
                                 <div class="flex-1">
@@ -80,7 +80,7 @@
                     <div class="space-y-3 mb-6">
                         <div class="flex justify-between">
                             <span class="text-gray-600">Subtotal</span>
-                            <span class="font-semibold">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
+                            <span class="font-semibold">Rp {{ number_format($order->total_price, 0, ',', '.') }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600">Ongkos Kirim</span>
@@ -93,7 +93,7 @@
                         <div class="border-t pt-3">
                             <div class="flex justify-between">
                                 <span class="text-lg font-semibold text-gray-900">Total</span>
-                                <span class="text-lg font-bold text-gray-900">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
+                                <span class="text-lg font-bold text-gray-900">Rp {{ number_format($order->total_price, 0, ',', '.') }}</span>
                             </div>
                         </div>
                     </div>
@@ -106,7 +106,7 @@
 
                         <div>
                             <h3 class="font-medium text-gray-900 mb-2">Metode Pembayaran</h3>
-                            <p class="text-sm text-gray-600">{{ ucfirst($order->payment_method ?? 'Tidak tersedia') }}</p>
+                            <p class="text-sm text-gray-600">{{ ucfirst($order->transaction->status ?? 'Tidak tersedia') }}</p>
                         </div>
 
                         @if($order->status === 'delivered')

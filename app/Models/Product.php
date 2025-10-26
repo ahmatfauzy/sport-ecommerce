@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory; 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
 {
@@ -29,5 +30,49 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function getImageUrlAttribute()
+    {
+        $images = $this->images ?? [];
+        if (empty($images)) {
+            return 'https://via.placeholder.com/400x300';
+        }
+        
+        $firstImage = $images[0];
+        
+        // Check if it's already a full URL
+        if (filter_var($firstImage, FILTER_VALIDATE_URL)) {
+            return $firstImage;
+        }
+        
+        // If it's a storage path, return the full URL
+        if (Storage::disk('public')->exists($firstImage)) {
+            return Storage::url($firstImage);
+        }
+        
+        return 'https://via.placeholder.com/400x300';
+    }
+
+    public function getImageUrlsAttribute()
+    {
+        $images = $this->images ?? [];
+        if (empty($images)) {
+            return ['https://via.placeholder.com/400x300'];
+        }
+        
+        return array_map(function($image) {
+            // Check if it's already a full URL
+            if (filter_var($image, FILTER_VALIDATE_URL)) {
+                return $image;
+            }
+            
+            // If it's a storage path, return the full URL
+            if (Storage::disk('public')->exists($image)) {
+                return Storage::url($image);
+            }
+            
+            return 'https://via.placeholder.com/400x300';
+        }, $images);
     }
 }

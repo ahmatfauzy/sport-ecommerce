@@ -34,11 +34,11 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                         <div>
                             <p class="text-sm text-gray-600">Total Pesanan</p>
-                            <p class="font-semibold text-gray-900">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</p>
+                            <p class="font-semibold text-gray-900">Rp {{ number_format($order->total_price, 0, ',', '.') }}</p>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-600">Metode Pembayaran</p>
-                            <p class="font-semibold text-gray-900">{{ ucfirst($order->payment_method ?? 'N/A') }}</p>
+                            <p class="text-sm text-gray-600">Nomor Pesanan</p>
+                            <p class="font-semibold text-gray-900">{{ $order->number }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-600">Alamat Pengiriman</p>
@@ -47,13 +47,13 @@
                     </div>
 
                     <!-- Order Items -->
-                    @if($order->orderItems && $order->orderItems->count() > 0)
+                    @if($order->items && $order->items->count() > 0)
                     <div class="border-t pt-4">
                         <h4 class="font-medium text-gray-900 mb-3">Item Pesanan:</h4>
                         <div class="space-y-2">
-                            @foreach($order->orderItems as $item)
+                            @foreach($order->items as $item)
                             <div class="flex items-center space-x-3">
-                                <img src="{{ $item->product->images[0] ?? 'https://via.placeholder.com/50x50' }}" 
+                                <img src="{{ $item->product->image_url }}" 
                                      alt="{{ $item->product->name }}" 
                                      class="w-12 h-12 object-cover rounded">
                                 <div class="flex-1">

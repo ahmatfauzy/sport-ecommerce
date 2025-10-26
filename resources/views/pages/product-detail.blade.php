@@ -25,14 +25,14 @@
                 <div class="space-y-4">
                     <!-- Main Image -->
                     <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden">
-                        <img id="mainImage" src="{{ $product->images[0] ?? 'https://via.placeholder.com/600x600' }}" 
+                        <img id="mainImage" src="{{ $product->image_url }}" 
                              alt="{{ $product->name }}" class="w-full h-full object-cover">
                     </div>
                     
                     <!-- Thumbnail Images -->
-                    @if(count($product->images) > 1)
+                    @if(count($product->image_urls) > 1)
                     <div class="grid grid-cols-4 gap-2">
-                        @foreach($product->images as $index => $image)
+                        @foreach($product->image_urls as $index => $image)
                         <button onclick="changeMainImage('{{ $image }}')" 
                                 class="aspect-square bg-gray-100 rounded-lg overflow-hidden border-2 {{ $index === 0 ? 'border-blue-500' : 'border-transparent hover:border-gray-300' }}">
                             <img src="{{ $image }}" alt="Image {{ $index + 1 }}" class="w-full h-full object-cover">

@@ -91,7 +91,7 @@
                         <div class="bg-white shadow-lg rounded-xl overflow-hidden group transition-all duration-300 hover:shadow-xl" 
                              data-aos="fade-up" data-aos-delay="{{ $index * 100 }}">
                             <a href="/produk/{{ $product->slug }}" class="block">
-                                <img src="{{ $product->images[0] ?? 'https://via.placeholder.com/400x300' }}" 
+                                <img src="{{ $product->image_url }}" 
                                     alt="{{ $product->name }}"
                                     class="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300">
                                 <div class="p-4">
