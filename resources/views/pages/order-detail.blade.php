@@ -4,211 +4,123 @@
 <div class="bg-gray-100 pt-24 pb-16 min-h-screen">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <!-- Back Button -->
-        <div class="mb-6" data-aos="fade-right">
-            <a href="/orders" class="inline-flex items-center text-blue-600 hover:text-blue-800">
-                <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-                </svg>
-                Back to Orders
-            </a>
+        <!-- Breadcrumb -->
+        <nav class="mb-8">
+            <ol class="flex items-center space-x-2 text-sm text-gray-600">
+                <li><a href="/orders" class="hover:text-black">Pesanan Saya</a></li>
+                <li class="flex items-center">
+                    <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span>Detail Pesanan #{{ $order->id }}</span>
+                </li>
+            </ol>
+        </nav>
+
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-black">Detail Pesanan #{{ $order->id }}</h1>
+            <p class="text-gray-600">Tanggal: {{ $order->created_at->format('d M Y, H:i') }}</p>
         </div>
 
-        <!-- Order Header -->
-        <div class="bg-white rounded-lg shadow-md p-6 mb-6" data-aos="fade-up">
-            <div class="flex justify-between items-start">
-                <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Order #ORD-001</h1>
-                    <p class="text-gray-600 mt-1">Placed on January 20, 2024</p>
-                </div>
-                <div class="text-right">
-                    @php
-                        $statusColors = [
-                            'pending' => 'bg-yellow-100 text-yellow-800',
-                            'processing' => 'bg-blue-100 text-blue-800',
-                            'shipped' => 'bg-purple-100 text-purple-800',
-                            'delivered' => 'bg-green-100 text-green-800',
-                            'cancelled' => 'bg-red-100 text-red-800'
-                        ];
-                    @endphp
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
-                        Pending
-                    </span>
-                    <p class="text-2xl font-bold text-gray-900 mt-2">Rp 2.814.000</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Order Items -->
-            <div class="lg:col-span-2">
-                <div class="bg-white rounded-lg shadow-md p-6 mb-6" data-aos="fade-up" data-aos-delay="100">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Order Items</h2>
-                    
-                    @php
-                        $orderItems = [
-                            [
-                                'name' => 'Nike Air Zoom Pegasus 39',
-                                'qty' => 1,
-                                'price' => 1899000,
-                                'image' => 'https://placehold.co/100x100/EBF8FF/3182CE?text=Nike',
-                                'description' => 'Running shoes with responsive cushioning'
-                            ],
-                            [
-                                'name' => 'Jersey Basket Pro DryFit',
-                                'qty' => 2,
-                                'price' => 450000,
-                                'image' => 'https://placehold.co/100x100/FFF5EB/DD6B20?text=Jersey',
-                                'description' => 'Professional basketball jersey'
-                            ],
-                        ];
-                    @endphp
-                    
-                    <div class="space-y-4">
-                        @foreach($orderItems as $item)
-                        <div class="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg">
-                            <img src="{{ $item['image'] }}" alt="{{ $item['name'] }}" class="w-20 h-20 object-cover rounded-lg">
-                            <div class="flex-1">
-                                <h3 class="font-semibold text-gray-900">{{ $item['name'] }}</h3>
-                                <p class="text-sm text-gray-600 mt-1">{{ $item['description'] }}</p>
-                                <p class="text-sm text-gray-500 mt-1">Quantity: {{ $item['qty'] }}</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="font-semibold text-gray-900">Rp {{ number_format($item['price'] * $item['qty'], 0, ',', '.') }}</p>
-                                <p class="text-sm text-gray-500">Rp {{ number_format($item['price'], 0, ',', '.') }} each</p>
-                            </div>
-                        </div>
-                        @endforeach
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Order Info -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- Order Status -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Status Pesanan</h2>
+                    <div class="flex items-center justify-between">
+                        <span class="inline-flex px-4 py-2 text-lg font-semibold rounded-full 
+                            @if($order->status === 'pending') bg-yellow-100 text-yellow-800
+                            @elseif($order->status === 'processing') bg-blue-100 text-blue-800
+                            @elseif($order->status === 'shipped') bg-purple-100 text-purple-800
+                            @elseif($order->status === 'delivered') bg-green-100 text-green-800
+                            @else bg-red-100 text-red-800 @endif">
+                            {{ ucfirst($order->status) }}
+                        </span>
+                        <p class="text-sm text-gray-600">Terakhir diupdate: {{ $order->updated_at->format('d M Y, H:i') }}</p>
                     </div>
                 </div>
 
-                <!-- Order Timeline -->
-                <div class="bg-white rounded-lg shadow-md p-6" data-aos="fade-up" data-aos-delay="200">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Order Timeline</h2>
-                    
-                    @php
-                        $timeline = [
-                            ['status' => 'Order Placed', 'date' => '2024-01-20 10:30', 'completed' => true],
-                            ['status' => 'Payment Confirmed', 'date' => '2024-01-20 10:35', 'completed' => true],
-                            ['status' => 'Processing', 'date' => '2024-01-20 14:00', 'completed' => true],
-                            ['status' => 'Shipped', 'date' => null, 'completed' => false],
-                            ['status' => 'Delivered', 'date' => null, 'completed' => false],
-                        ];
-                    @endphp
-                    
-                    <div class="space-y-4">
-                        @foreach($timeline as $index => $step)
-                        <div class="flex items-center space-x-4">
-                            <div class="flex-shrink-0">
-                                @if($step['completed'])
-                                <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                                    <svg class="w-5 h-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                                    </svg>
+                <!-- Order Items -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Item Pesanan</h2>
+                    @if($order->orderItems && $order->orderItems->count() > 0)
+                        <div class="space-y-4">
+                            @foreach($order->orderItems as $item)
+                            <div class="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg">
+                                <img src="{{ $item->product->images[0] ?? 'https://via.placeholder.com/80x80' }}" 
+                                     alt="{{ $item->product->name }}" 
+                                     class="w-20 h-20 object-cover rounded-lg">
+                                <div class="flex-1">
+                                    <h3 class="font-semibold text-gray-900">{{ $item->product->name }}</h3>
+                                    <p class="text-sm text-gray-600">{{ $item->product->description ?? 'No description' }}</p>
+                                    <p class="text-sm text-gray-600 mt-1">Qty: {{ $item->quantity }}</p>
                                 </div>
-                                @else
-                                <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-                                    <span class="text-gray-600 text-sm font-medium">{{ $index + 1 }}</span>
+                                <div class="text-right">
+                                    <p class="font-semibold text-gray-900">Rp {{ number_format($item->price, 0, ',', '.') }}</p>
+                                    <p class="text-sm text-gray-600">Total: Rp {{ number_format($item->quantity * $item->price, 0, ',', '.') }}</p>
                                 </div>
-                                @endif
                             </div>
-                            <div class="flex-1">
-                                <p class="font-medium text-gray-900">{{ $step['status'] }}</p>
-                                @if($step['date'])
-                                <p class="text-sm text-gray-500">{{ $step['date'] }}</p>
-                                @else
-                                <p class="text-sm text-gray-400">Pending</p>
-                                @endif
-                            </div>
+                            @endforeach
                         </div>
-                        @endforeach
-                    </div>
+                    @else
+                        <p class="text-gray-500">Tidak ada item dalam pesanan ini</p>
+                    @endif
                 </div>
             </div>
 
-            <!-- Order Summary & Shipping -->
+            <!-- Order Summary -->
             <div class="lg:col-span-1">
-                <!-- Order Summary -->
-                <div class="bg-white rounded-lg shadow-md p-6 mb-6" data-aos="fade-up" data-aos-delay="300">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Order Summary</h2>
+                <div class="bg-white rounded-lg shadow-lg p-6 sticky top-24">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Ringkasan Pesanan</h2>
                     
-                    <div class="space-y-3">
+                    <div class="space-y-3 mb-6">
                         <div class="flex justify-between">
-                            <span class="text-gray-600">Subtotal (2 items)</span>
-                            <span class="font-medium">Rp 2.799.000</span>
+                            <span class="text-gray-600">Subtotal</span>
+                            <span class="font-semibold">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
                         </div>
                         <div class="flex justify-between">
-                            <span class="text-gray-600">Shipping</span>
-                            <span class="font-medium">Rp 15.000</span>
+                            <span class="text-gray-600">Ongkos Kirim</span>
+                            <span class="font-semibold">Rp 0</span>
                         </div>
-                        <div class="flex justify-between border-t pt-3">
-                            <span class="text-lg font-semibold text-gray-900">Total</span>
-                            <span class="text-lg font-semibold text-gray-900">Rp 2.814.000</span>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Pajak</span>
+                            <span class="font-semibold">Rp 0</span>
+                        </div>
+                        <div class="border-t pt-3">
+                            <div class="flex justify-between">
+                                <span class="text-lg font-semibold text-gray-900">Total</span>
+                                <span class="text-lg font-bold text-gray-900">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Shipping Information -->
-                <div class="bg-white rounded-lg shadow-md p-6 mb-6" data-aos="fade-up" data-aos-delay="400">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Shipping Information</h2>
-                    
-                    <div class="space-y-2 text-sm">
+                    <div class="space-y-4">
                         <div>
-                            <span class="font-medium text-gray-700">Name:</span>
-                            <span class="text-gray-600">Budi Santoso</span>
+                            <h3 class="font-medium text-gray-900 mb-2">Informasi Pengiriman</h3>
+                            <p class="text-sm text-gray-600">{{ $order->shipping_address ?? 'Alamat tidak tersedia' }}</p>
                         </div>
-                        <div>
-                            <span class="font-medium text-gray-700">Phone:</span>
-                            <span class="text-gray-600">081234567890</span>
-                        </div>
-                        <div>
-                            <span class="font-medium text-gray-700">Address:</span>
-                            <span class="text-gray-600">Jl. Merdeka 123, Jakarta</span>
-                        </div>
-                        <div>
-                            <span class="font-medium text-gray-700">Shipping Method:</span>
-                            <span class="text-gray-600">Standard Delivery</span>
-                        </div>
-                        <div>
-                            <span class="font-medium text-gray-700">Estimated Delivery:</span>
-                            <span class="text-gray-600">3-5 business days</span>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Payment Information -->
-                <div class="bg-white rounded-lg shadow-md p-6" data-aos="fade-up" data-aos-delay="500">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Payment Information</h2>
-                    
-                    <div class="space-y-2 text-sm">
                         <div>
-                            <span class="font-medium text-gray-700">Payment Method:</span>
-                            <span class="text-gray-600">Credit Card (****1234)</span>
+                            <h3 class="font-medium text-gray-900 mb-2">Metode Pembayaran</h3>
+                            <p class="text-sm text-gray-600">{{ ucfirst($order->payment_method ?? 'Tidak tersedia') }}</p>
                         </div>
-                        <div>
-                            <span class="font-medium text-gray-700">Payment Status:</span>
-                            <span class="text-green-600 font-medium">Paid</span>
-                        </div>
-                        <div>
-                            <span class="font-medium text-gray-700">Transaction ID:</span>
-                            <span class="text-gray-600">TXN-ABC123456</span>
-                        </div>
+
+                        @if($order->status === 'delivered')
+                        <button class="w-full bg-green-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-green-700 transition duration-300">
+                            Pesanan Selesai
+                        </button>
+                        @elseif($order->status === 'shipped')
+                        <button class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">
+                            Lacak Pengiriman
+                        </button>
+                        @endif
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="mt-8 flex justify-center space-x-4" data-aos="fade-up" data-aos-delay="600">
-            <button class="px-6 py-2 text-red-600 border border-red-600 rounded-md hover:bg-red-50">
-                Cancel Order
-            </button>
-            <button class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                Contact Support
-            </button>
-            <button class="px-6 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700">
-                Download Invoice
-            </button>
         </div>
     </div>
 </div>

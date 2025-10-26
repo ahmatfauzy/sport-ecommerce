@@ -4,7 +4,10 @@ use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\ProductController;
 use App\Http\Controllers\Web\CategoryController;
 use App\Http\Controllers\Web\AuthController;
+use App\Http\Controllers\Web\ProfileController;
+use App\Http\Controllers\Web\OrderController;
 use App\Http\Controllers\Web\Admin\DashboardController;
+use App\Http\Controllers\Web\Admin\ProductController as AdminProductController;
 use Illuminate\Support\Facades\Route;
 
 // Homepage
@@ -25,9 +28,18 @@ Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('regi
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// User routes (authenticated)
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders');
+    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+});
+
 // Admin routes
 Route::middleware(['auth', 'can:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('products', AdminProductController::class);
 });
 
 // Other pages (you can add controllers for these later)

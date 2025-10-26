@@ -5,178 +5,103 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <!-- Header -->
-        <header class="mb-8" data-aos="fade-down">
-            <h1 class="text-4xl font-bold text-gray-800">My Orders</h1>
-            <p class="mt-2 text-lg text-gray-600">Track your order history and status</p>
-        </header>
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-black">Pesanan Saya</h1>
+            <p class="text-gray-600">Lihat dan kelola pesanan Anda</p>
+        </div>
 
-        <!-- Orders List -->
-        <div class="space-y-6">
-            @php
-                $orders = [
-                    [
-                        'id' => 'ORD-001',
-                        'date' => '2024-01-20',
-                        'status' => 'pending',
-                        'total' => 2450000,
-                        'items' => [
-                            ['name' => 'Nike Air Zoom Pegasus 39', 'qty' => 1, 'price' => 1899000, 'image' => 'https://placehold.co/80x80/EBF8FF/3182CE?text=Nike'],
-                            ['name' => 'Jersey Basket Pro DryFit', 'qty' => 2, 'price' => 450000, 'image' => 'https://placehold.co/80x80/FFF5EB/DD6B20?text=Jersey'],
-                        ]
-                    ],
-                    [
-                        'id' => 'ORD-002',
-                        'date' => '2024-01-19',
-                        'status' => 'processing',
-                        'total' => 1899000,
-                        'items' => [
-                            ['name' => 'Adidas Ultraboost Light', 'qty' => 1, 'price' => 1899000, 'image' => 'https://placehold.co/80x80/E6FFFA/38B2AC?text=Adidas'],
-                        ]
-                    ],
-                    [
-                        'id' => 'ORD-003',
-                        'date' => '2024-01-18',
-                        'status' => 'shipped',
-                        'total' => 800000,
-                        'items' => [
-                            ['name' => 'Dumbbell Set 10kg', 'qty' => 1, 'price' => 350000, 'image' => 'https://placehold.co/80x80/F7FAFC/718096?text=Dumbbell'],
-                            ['name' => 'Yoga Mat Premium', 'qty' => 1, 'price' => 250000, 'image' => 'https://placehold.co/80x80/F0FFF4/38A169?text=Yoga'],
-                        ]
-                    ],
-                    [
-                        'id' => 'ORD-004',
-                        'date' => '2024-01-17',
-                        'status' => 'delivered',
-                        'total' => 1200000,
-                        'items' => [
-                            ['name' => 'Bola Basket Indoor Pro', 'qty' => 1, 'price' => 320000, 'image' => 'https://placehold.co/80x80/FAF5FF/805AD5?text=Bola'],
-                            ['name' => 'Sepatu Running Pro', 'qty' => 1, 'price' => 799000, 'image' => 'https://placehold.co/80x80/EBF8FF/3182CE?text=Sepatu'],
-                        ]
-                    ],
-                ];
-            @endphp
-
-            @foreach($orders as $index => $order)
-            <div class="bg-white rounded-lg shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="{{ $index * 100 }}">
-                <!-- Order Header -->
-                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-                    <div class="flex justify-between items-center">
+        @if($orders->count() > 0)
+            <div class="space-y-6">
+                @foreach($orders as $order)
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                         <div>
-                            <h3 class="text-lg font-semibold text-gray-900">Order #{{ $order['id'] }}</h3>
-                            <p class="text-sm text-gray-600">Placed on {{ $order['date'] }}</p>
+                            <h3 class="text-lg font-semibold text-gray-900">Pesanan #{{ $order->id }}</h3>
+                            <p class="text-sm text-gray-600">Tanggal: {{ $order->created_at->format('d M Y, H:i') }}</p>
                         </div>
-                        <div class="text-right">
-                            @php
-                                $statusColors = [
-                                    'pending' => 'bg-yellow-100 text-yellow-800',
-                                    'processing' => 'bg-blue-100 text-blue-800',
-                                    'shipped' => 'bg-purple-100 text-purple-800',
-                                    'delivered' => 'bg-green-100 text-green-800',
-                                    'cancelled' => 'bg-red-100 text-red-800'
-                                ];
-                            @endphp
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium {{ $statusColors[$order['status']] }}">
-                                {{ ucfirst($order['status']) }}
+                        <div class="mt-2 md:mt-0">
+                            <span class="inline-flex px-3 py-1 text-sm font-semibold rounded-full 
+                                @if($order->status === 'pending') bg-yellow-100 text-yellow-800
+                                @elseif($order->status === 'processing') bg-blue-100 text-blue-800
+                                @elseif($order->status === 'shipped') bg-purple-100 text-purple-800
+                                @elseif($order->status === 'delivered') bg-green-100 text-green-800
+                                @else bg-red-100 text-red-800 @endif">
+                                {{ ucfirst($order->status) }}
                             </span>
-                            <p class="text-lg font-semibold text-gray-900 mt-1">Rp {{ number_format($order['total'], 0, ',', '.') }}</p>
                         </div>
                     </div>
-                </div>
 
-                <!-- Order Items -->
-                <div class="px-6 py-4">
-                    <div class="space-y-3">
-                        @foreach($order['items'] as $item)
-                        <div class="flex items-center space-x-4">
-                            <img src="{{ $item['image'] }}" alt="{{ $item['name'] }}" class="w-16 h-16 object-cover rounded-lg">
-                            <div class="flex-1">
-                                <h4 class="font-medium text-gray-900">{{ $item['name'] }}</h4>
-                                <p class="text-sm text-gray-600">Quantity: {{ $item['qty'] }}</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="font-semibold text-gray-900">Rp {{ number_format($item['price'] * $item['qty'], 0, ',', '.') }}</p>
-                            </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div>
+                            <p class="text-sm text-gray-600">Total Pesanan</p>
+                            <p class="font-semibold text-gray-900">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</p>
                         </div>
-                        @endforeach
+                        <div>
+                            <p class="text-sm text-gray-600">Metode Pembayaran</p>
+                            <p class="font-semibold text-gray-900">{{ ucfirst($order->payment_method ?? 'N/A') }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Alamat Pengiriman</p>
+                            <p class="font-semibold text-gray-900">{{ $order->shipping_address ?? 'N/A' }}</p>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Order Actions -->
-                <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
-                    <div class="flex justify-between items-center">
-                        <div class="flex space-x-3">
-                            <button onclick="viewOrderDetail('{{ $order['id'] }}')" class="text-blue-600 hover:text-blue-800 font-medium">
-                                View Details
-                            </button>
-                            @if($order['status'] === 'delivered')
-                            <button class="text-green-600 hover:text-green-800 font-medium">
-                                Reorder
-                            </button>
-                            @endif
-                        </div>
-                        <div class="flex space-x-3">
-                            @if($order['status'] === 'pending')
-                            <button class="px-4 py-2 text-red-600 border border-red-600 rounded-md hover:bg-red-50">
-                                Cancel Order
-                            </button>
-                            @endif
-                            @if($order['status'] === 'delivered')
-                            <button class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                                Leave Review
-                            </button>
-                            @endif
+                    <!-- Order Items -->
+                    @if($order->orderItems && $order->orderItems->count() > 0)
+                    <div class="border-t pt-4">
+                        <h4 class="font-medium text-gray-900 mb-3">Item Pesanan:</h4>
+                        <div class="space-y-2">
+                            @foreach($order->orderItems as $item)
+                            <div class="flex items-center space-x-3">
+                                <img src="{{ $item->product->images[0] ?? 'https://via.placeholder.com/50x50' }}" 
+                                     alt="{{ $item->product->name }}" 
+                                     class="w-12 h-12 object-cover rounded">
+                                <div class="flex-1">
+                                    <p class="font-medium text-gray-900">{{ $item->product->name }}</p>
+                                    <p class="text-sm text-gray-600">Qty: {{ $item->quantity }} x Rp {{ number_format($item->price, 0, ',', '.') }}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="font-semibold text-gray-900">Rp {{ number_format($item->quantity * $item->price, 0, ',', '.') }}</p>
+                                </div>
+                            </div>
+                            @endforeach
                         </div>
                     </div>
+                    @endif
+
+                    <div class="flex justify-end mt-4">
+                        <a href="/orders/{{ $order->id }}" 
+                           class="bg-black text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-800 transition duration-300">
+                            Lihat Detail
+                        </a>
+                    </div>
                 </div>
+                @endforeach
             </div>
-            @endforeach
-        </div>
 
-        <!-- Empty State -->
-        @if(count($orders) === 0)
-        <div class="text-center bg-white p-12 rounded-lg shadow-md" data-aos="fade-up">
-            <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
-            </svg>
-            <h2 class="text-2xl font-semibold text-gray-800 mb-2">No Orders Yet</h2>
-            <p class="text-gray-600 mb-6">You haven't placed any orders yet. Start shopping to see your orders here.</p>
-            <a href="/produk" class="inline-block px-6 py-2 bg-[#3a3a3a] text-white font-semibold rounded-lg shadow-md hover:bg-[#2c2c2c] transition">
-                Start Shopping
-            </a>
-        </div>
-        @endif
+            <!-- Pagination -->
+            @if($orders->hasPages())
+            <div class="mt-8 flex justify-center">
+                {{ $orders->links() }}
+            </div>
+            @endif
 
-        <!-- Pagination -->
-        @if(count($orders) > 0)
-        <div class="mt-8 flex justify-center" data-aos="fade-up">
-            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-                <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                    <span class="sr-only">Previous</span>
-                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+        @else
+            <!-- Empty State -->
+            <div class="text-center py-12">
+                <div class="w-24 h-24 bg-gray-200 rounded-full mx-auto mb-4 flex items-center justify-center">
+                    <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                     </svg>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">Belum ada pesanan</h3>
+                <p class="text-gray-600 mb-6">Mulai berbelanja untuk melihat pesanan Anda di sini</p>
+                <a href="/produk" 
+                   class="bg-black text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition duration-300">
+                    Mulai Berbelanja
                 </a>
-                <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">1</a>
-                <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">2</a>
-                <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">3</a>
-                <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                    <span class="sr-only">Next</span>
-                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                    </svg>
-                </a>
-            </nav>
-        </div>
+            </div>
         @endif
     </div>
 </div>
-
-@push('scripts')
-<script>
-    function viewOrderDetail(orderId) {
-        // Redirect to order detail page
-        window.location.href = `/orders/${orderId}`;
-    }
-</script>
-@endpush
 @endsection
