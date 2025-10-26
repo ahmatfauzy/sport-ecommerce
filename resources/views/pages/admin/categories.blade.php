@@ -193,10 +193,13 @@
         const form = this;
         const action = form.action;
         const formData = new FormData(form);
-        const method = form.querySelector('#formMethod').value;
+        // send as POST so PHP can parse multipart/form-data. The _method hidden field
+        // will tell Laravel to treat it as PUT when editing.
+        const fetchMethod = 'POST';
 
         fetch(action, {
-                method: method,
+                method: fetchMethod,
+                credentials: 'same-origin',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
                     'Accept': 'application/json'
@@ -209,7 +212,9 @@
                         success: true
                     }));
                 }
-                return response.json();
+                return response.json().then(data => {
+                    throw data;
+                });
             })
             .then(data => {
                 if (data.success) {
@@ -220,7 +225,7 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Terjadi kesalahan');
+                alert((error && error.message) || 'Terjadi kesalahan');
             });
     });
 
