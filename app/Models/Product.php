@@ -16,6 +16,8 @@ class Product extends Model
         'name',
         'slug',
         'description',
+        'specification',
+        'features',
         'price',
         'stock',
         'images',
@@ -25,6 +27,8 @@ class Product extends Model
     protected $casts = [
         'images' => 'array',
         'is_active' => 'boolean',
+        'specification' => 'array',
+        'features' => 'array',
     ];
 
     public function category(): BelongsTo

@@ -71,10 +71,14 @@
                         <p class="text-xs text-gray-400">admin@example.com</p>
                     </div>
                 </div>
-                <a href="/logout" class="block mt-2 text-sm text-gray-400 hover:text-white">
-                    <i class="fas fa-sign-out-alt mr-2"></i>
-                    Logout
-                </a>
+                <form method="POST" action="/logout">
+                    @csrf
+                    <button type="submit" class="block mt-2 text-sm text-gray-400 hover:text-white">
+                        <i class="fas fa-sign-out-alt mr-2"></i>
+                        Logout
+                    </button>
+                </form>
+
             </div>
         </div>
         

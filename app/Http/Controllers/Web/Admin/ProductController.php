@@ -35,6 +35,8 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
+            'specification' => 'nullable|string',
+            'features' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'category_id' => 'required|exists:categories,id',
@@ -42,10 +44,25 @@ class ProductController extends Controller
             'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        // Handle specification
+        $specification = null;
+        if ($request->specification) {
+            $specification = json_decode($request->specification, true);
+        }
+
+        // Handle features
+        $features = null;
+        if ($request->features) {
+            $features = explode("\n", $request->features);
+            $features = array_filter(array_map('trim', $features));
+        }
+
         $product = Product::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'description' => $request->description,
+            'specification' => $specification,
+            'features' => $features,
             'price' => $request->price,
             'stock' => $request->stock,
             'category_id' => $request->category_id,
@@ -76,16 +93,33 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
+            'specification' => 'nullable|string',
+            'features' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'category_id' => 'required|exists:categories,id',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        // Handle specification
+        $specification = null;
+        if ($request->specification) {
+            $specification = json_decode($request->specification, true);
+        }
+
+        // Handle features
+        $features = null;
+        if ($request->features) {
+            $features = explode("\n", $request->features);
+            $features = array_filter(array_map('trim', $features));
+        }
+
         $product->update([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'description' => $request->description,
+            'specification' => $specification ?? $product->specification,
+            'features' => $features ?? $product->features,
             'price' => $request->price,
             'stock' => $request->stock,
             'category_id' => $request->category_id,
@@ -110,7 +144,19 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
+        // Delete associated images
+        if ($product->images) {
+            foreach ($product->images as $image) {
+                Storage::disk('public')->delete($image);
+            }
+        }
+        
         $product->delete();
+        
+        if (request()->expectsJson()) {
+            return response()->json(['success' => true, 'message' => 'Produk berhasil dihapus!']);
+        }
+        
         return redirect()->route('admin.products.index')->with('success', 'Produk berhasil dihapus!');
     }
 }

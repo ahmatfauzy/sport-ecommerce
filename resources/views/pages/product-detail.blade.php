@@ -161,35 +161,21 @@
                     </div>
 
                     <!-- Product Features -->
+                    @if($product->features && count((array)$product->features) > 0)
                     <div class="border-t pt-6">
                         <h3 class="text-lg font-semibold text-gray-900 mb-3">Key Features</h3>
                         <ul class="space-y-2 text-gray-600">
+                            @foreach($product->features as $feature)
                             <li class="flex items-center">
                                 <svg class="w-5 h-5 text-green-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                                 </svg>
-                                Responsive Air Zoom cushioning
+                                {{ is_array($feature) ? implode(' - ', $feature) : $feature }}
                             </li>
-                            <li class="flex items-center">
-                                <svg class="w-5 h-5 text-green-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                                </svg>
-                                Lightweight mesh upper
-                            </li>
-                            <li class="flex items-center">
-                                <svg class="w-5 h-5 text-green-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                                </svg>
-                                Durable rubber outsole
-                            </li>
-                            <li class="flex items-center">
-                                <svg class="w-5 h-5 text-green-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                                </svg>
-                                Breathable design
-                            </li>
+                            @endforeach
                         </ul>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -241,50 +227,18 @@
                 <!-- Specifications Tab -->
                 <div id="specifications-tab" class="tab-content hidden">
                     <h3 class="text-xl font-semibold text-gray-900 mb-4">Product Specifications</h3>
+                    @if($product->specification && is_array($product->specification) && count($product->specification) > 0)
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <h4 class="font-semibold text-gray-900 mb-3">General</h4>
-                            <dl class="space-y-2">
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Brand:</dt>
-                                    <dd class="font-medium">Nike</dd>
-                                </div>
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Model:</dt>
-                                    <dd class="font-medium">Air Zoom Pegasus 39</dd>
-                                </div>
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Gender:</dt>
-                                    <dd class="font-medium">Unisex</dd>
-                                </div>
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Weight:</dt>
-                                    <dd class="font-medium">280g (Size 42)</dd>
-                                </div>
-                            </dl>
+                        @foreach($product->specification as $key => $value)
+                        <div class="flex justify-between border-b pb-2">
+                            <dt class="text-gray-600">{{ $key }}:</dt>
+                            <dd class="font-medium">{{ $value }}</dd>
                         </div>
-                        <div>
-                            <h4 class="font-semibold text-gray-900 mb-3">Technical</h4>
-                            <dl class="space-y-2">
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Upper:</dt>
-                                    <dd class="font-medium">Mesh</dd>
-                                </div>
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Midsole:</dt>
-                                    <dd class="font-medium">Air Zoom</dd>
-                                </div>
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Outsole:</dt>
-                                    <dd class="font-medium">Rubber</dd>
-                                </div>
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Drop:</dt>
-                                    <dd class="font-medium">10mm</dd>
-                                </div>
-                            </dl>
-                        </div>
+                        @endforeach
                     </div>
+                    @else
+                    <p class="text-gray-500">Spesifikasi belum tersedia</p>
+                    @endif
                 </div>
 
                 <!-- Reviews Tab -->

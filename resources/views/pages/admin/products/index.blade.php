@@ -3,15 +3,15 @@
 @section('content')
 <div class="bg-gray-100 pt-2 pb-16 min-h-screen">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         <!-- Header -->
         <div class="mb-8 flex justify-between items-center">
             <div>
                 <h1 class="text-3xl font-bold text-black">Kelola Produk</h1>
                 <p class="text-gray-600">Kelola semua produk di toko Anda</p>
             </div>
-            <a href="/admin/products/create" 
-               class="bg-black text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition duration-300">
+            <a href="/admin/products/create"
+                class="bg-black text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition duration-300">
                 Tambah Produk
             </a>
         </div>
@@ -43,9 +43,9 @@
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 h-12 w-12">
-                                        <img class="h-12 w-12 rounded-lg object-cover" 
-                                             src="{{ $product->image_url }}" 
-                                             alt="{{ $product->name }}">
+                                        <img class="h-12 w-12 rounded-lg object-cover"
+                                            src="{{ $product->image_url }}"
+                                            alt="{{ $product->name }}">
                                     </div>
                                     <div class="ml-4">
                                         <div class="text-sm font-medium text-gray-900">{{ $product->name }}</div>
@@ -70,17 +70,13 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex space-x-2">
-                                    <a href="/admin/products/{{ $product->id }}/edit" 
-                                       class="text-blue-600 hover:text-blue-900">Edit</a>
-                                    <form method="POST" action="/admin/products/{{ $product->id }}" class="inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" 
-                                                class="text-red-600 hover:text-red-900"
-                                                onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">
-                                            Hapus
-                                        </button>
-                                    </form>
+                                    <a href="/admin/products/{{ $product->id }}/edit"
+                                        class="text-blue-600 hover:text-blue-900">Edit</a>
+                                    <button type="button"
+                                        class="text-red-600 hover:text-red-900 delete-product"
+                                        data-id="{{ $product->id }}">
+                                        Hapus
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -104,4 +100,56 @@
         @endif
     </div>
 </div>
+
+@push('scripts')
+<script>
+    document.querySelectorAll('.delete-product').forEach(button => {
+        button.addEventListener('click', function() {
+            const productId = this.getAttribute('data-id');
+
+            if (!confirm('Apakah Anda yakin ingin menghapus produk ini?')) {
+                return;
+            }
+
+            // Disable button
+            this.disabled = true;
+            this.textContent = 'Menghapus...';
+
+            fetch(`/admin/products/${productId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    credentials: 'same-origin'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Remove row from table
+                        this.closest('tr').remove();
+
+                        // Show success message
+                        const alert = document.createElement('div');
+                        alert.className = 'mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded';
+                        alert.textContent = data.message;
+                        document.querySelector('.max-w-7xl').insertBefore(alert, document.querySelector('.max-w-7xl').firstChild);
+
+                        setTimeout(() => alert.remove(), 3000);
+                    } else {
+                        alert('Gagal menghapus produk');
+                        this.disabled = false;
+                        this.textContent = 'Hapus';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan saat menghapus produk');
+                    this.disabled = false;
+                    this.textContent = 'Hapus';
+                });
+        });
+    });
+</script>
+@endpush
 @endsection

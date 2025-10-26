@@ -12,20 +12,21 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                     </svg>
                 </a>
-                <h1 class="text-3xl font-bold text-black">Tambah Produk Baru</h1>
+                <h1 class="text-3xl font-bold text-black">Edit Produk</h1>
             </div>
-            <p class="text-gray-600">Tambahkan produk baru ke toko Anda</p>
+            <p class="text-gray-600">Edit produk yang ada di toko Anda</p>
         </div>
 
         <!-- Form -->
         <div class="bg-white rounded-lg shadow-lg p-6">
-            <form method="POST" action="/admin/products" enctype="multipart/form-data" class="space-y-6">
+            <form method="POST" action="/admin/products/{{ $product->id }}" enctype="multipart/form-data" class="space-y-6">
                 @csrf
+                @method('PUT')
 
                 <!-- Name -->
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Produk</label>
-                    <input type="text" id="name" name="name" value="{{ old('name') }}" required
+                    <input type="text" id="name" name="name" value="{{ old('name', $product->name) }}" required
                         class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black">
                     @error('name')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -36,7 +37,7 @@
                 <div>
                     <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
                     <textarea id="description" name="description" rows="4" required
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black">{{ old('description') }}</textarea>
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black">{{ old('description', $product->description) }}</textarea>
                     @error('description')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -47,7 +48,7 @@
                     <label for="specification" class="block text-sm font-medium text-gray-700 mb-1">Spesifikasi (JSON)</label>
                     <textarea id="specification" name="specification" rows="4"
                         placeholder='{"Brand": "Nike", "Model": "Air Zoom", "Size": "42"}'
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black">{{ old('specification') }}</textarea>
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black">{{ old('specification', is_array($product->specification) ? json_encode($product->specification, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : ($product->specification ? json_encode($product->specification, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '')) }}</textarea>
                     @error('specification')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -58,7 +59,7 @@
                     <label for="features" class="block text-sm font-medium text-gray-700 mb-1">Features (Pisahkan dengan baris baru)</label>
                     <textarea id="features" name="features" rows="6"
                         placeholder="Responsive Air Zoom cushioning&#10;Lightweight mesh upper&#10;Durable rubber outsole"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black">{{ old('features') }}</textarea>
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black">{{ old('features', is_array($product->features) ? implode("\n", $product->features) : '') }}</textarea>
                     @error('features')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -68,7 +69,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Harga (Rp)</label>
-                        <input type="number" id="price" name="price" value="{{ old('price') }}" min="0" step="100" required
+                        <input type="number" id="price" name="price" value="{{ old('price', $product->price) }}" min="0" step="100" required
                             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black">
                         @error('price')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -77,7 +78,7 @@
 
                     <div>
                         <label for="stock" class="block text-sm font-medium text-gray-700 mb-1">Stok</label>
-                        <input type="number" id="stock" name="stock" value="{{ old('stock') }}" min="0" required
+                        <input type="number" id="stock" name="stock" value="{{ old('stock', $product->stock) }}" min="0" required
                             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black">
                         @error('stock')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -92,7 +93,7 @@
                         class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black">
                         <option value="">Pilih Kategori</option>
                         @foreach($categories as $category)
-                            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                            <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
                                 {{ $category->name }}
                             </option>
                         @endforeach
@@ -104,21 +105,31 @@
 
                 <!-- Images -->
                 <div>
-                    <label for="images" class="block text-sm font-medium text-gray-700 mb-1">Gambar Produk</label>
-                    <input type="file" id="images" name="images[]" multiple accept="image/*" required
+                    <label for="images" class="block text-sm font-medium text-gray-700 mb-1">Gambar Produk (Tambah Lebih Gambar)</label>
+                    <input type="file" id="images" name="images[]" multiple accept="image/*"
                         class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black">
-                    <p class="mt-1 text-sm text-gray-500">Pilih satu atau lebih gambar (maksimal 2MB per gambar)</p>
-                    @error('images')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                    @error('images.*')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                    <p class="mt-1 text-sm text-gray-500">Upload gambar tambahan (opsional)</p>
+                    
+                    @if($product->images && count($product->images) > 0)
+                    <div class="mt-4">
+                        <p class="text-sm font-medium text-gray-700 mb-2">Gambar Saat Ini:</p>
+                        <div class="grid grid-cols-3 gap-4">
+                            @foreach($product->images as $image)
+                            <div class="relative">
+                                <img src="{{ Storage::url($image) }}" alt="Product Image" class="w-full h-32 object-cover rounded">
+                                <button type="button" onclick="removeImage('{{ $image }}')" class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-xs">
+                                    Hapus
+                                </button>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
                 </div>
 
                 <!-- Active Status -->
                 <div class="flex items-center">
-                    <input type="checkbox" id="is_active" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }}
+                    <input type="checkbox" id="is_active" name="is_active" value="1" {{ old('is_active', $product->is_active) ? 'checked' : '' }}
                         class="h-4 w-4 text-black focus:ring-black border-gray-300 rounded">
                     <label for="is_active" class="ml-2 block text-sm text-gray-900">
                         Produk aktif (dapat dilihat pelanggan)
@@ -133,11 +144,21 @@
                     </a>
                     <button type="submit"
                         class="bg-black text-white px-6 py-2 rounded-lg font-semibold hover:bg-gray-800 transition duration-300">
-                        Simpan Produk
+                        Update Produk
                     </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    function removeImage(imagePath) {
+        // Implementasi untuk menghapus gambar dari array
+        alert('Fitur hapus gambar akan segera ditambahkan');
+    }
+</script>
+@endpush
 @endsection
+

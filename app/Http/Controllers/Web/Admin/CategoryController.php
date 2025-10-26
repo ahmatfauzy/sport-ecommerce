@@ -33,10 +33,14 @@ class CategoryController extends Controller
             'slug' => 'nullable|string|max:255|unique:categories,slug',
         ]);
 
-        Category::create([
+        $category = Category::create([
             'name' => $request->name,
             'slug' => $request->slug ?? \Str::slug($request->name),
         ]);
+
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true, 'message' => 'Kategori berhasil ditambahkan']);
+        }
 
         return redirect()->route('admin.categories.index')->with('success', 'Kategori berhasil ditambahkan');
     }
@@ -63,12 +67,21 @@ class CategoryController extends Controller
             'slug' => $request->slug ?? \Str::slug($request->name),
         ]);
 
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true, 'message' => 'Kategori berhasil diperbarui']);
+        }
+
         return redirect()->route('admin.categories.index')->with('success', 'Kategori berhasil diperbarui');
     }
 
     public function destroy(Category $category)
     {
         $category->delete();
+        
+        if (request()->expectsJson()) {
+            return response()->json(['success' => true, 'message' => 'Kategori berhasil dihapus']);
+        }
+        
         return redirect()->route('admin.categories.index')->with('success', 'Kategori berhasil dihapus');
     }
 }
