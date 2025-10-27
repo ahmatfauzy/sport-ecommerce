@@ -36,23 +36,22 @@
 
         <!-- Ikon Desktop (Search, Auth, Cart) -->
         <div class="hidden md:flex items-center space-x-4 relative">
+            <!-- Search -->
             <div class="relative flex items-center">
-                <!-- 🔍 FORM SEARCH BERFUNGSI TANPA MENGUBAH STYLE -->
                 <form action="{{ url('/produk/cari') }}" method="GET" class="flex items-center space-x-2">
                     <div
-                        class="group flex items-center border border-gray-300 rounded-full px-3 py-1.5 bg-gray-50 transition-all duration-300 
-        focus-within:ring-1 focus-within:ring-black w-36 hover:w-60 focus-within:w-60 absolute right-0 top-1/2 -translate-y-1/2 ">
+                        class="group flex items-center border border-gray-300 rounded-full px-3 py-1.5 bg-gray-50 transition-all duration-300  focus-within:ring-1 focus-within:ring-black w-36 hover:w-60 focus-within:w-60 absolute right-0 top-1/2 -translate-y-1/2 ">
                         <svg xmlns="http://www.w3.org/2000/svg"
                             class="h-5 w-5 text-gray-500 group-focus-within:text-black transition-colors duration-300"
                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />
                         </svg>
-                        <input type="text" name="q" 
-                        placeholder="Cari produk..."
-                        class="ml-2 outline-none text-sm bg-transparent w-full transition-all duration-300 h-6">
+                        <input type="text" name="q" placeholder="Cari produk..."
+                            class="ml-2 outline-none text-sm bg-transparent w-full transition-all duration-300 h-6">
                     </div>
                 </form>
+
             </div>
 
             @auth
@@ -94,6 +93,7 @@
                     class="border border-black text-black px-4 py-1.5 rounded-full text-sm font-semibold hover:bg-black hover:text-white transition">Daftar</a>
             @endauth
 
+            <!-- Cart -->
             <a href='/keranjang'
                 class="border border-gray-300 rounded-full p-2 shadow-sm hover:bg-gray-100 transition focus:outline-none">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-black" fill="none" viewBox="0 0 24 24"
@@ -118,108 +118,141 @@
     <!-- Menu Flyout Mobile -->
     <div id="mobile-menu"
         class="md:hidden bg-white border-t border-gray-200 shadow-md absolute w-full left-0 top-full z-40
-                max-h-0 opacity-0 invisible overflow-hidden transition-all duration-500 ease-in-out">
+        max-h-0 opacity-0 invisible overflow-hidden transition-all duration-500 ease-in-out">
+        <!-- 🔍 Form pencarian -->
+        <form action="{{ url('/produk/cari') }}" method="GET" class="px-4 py-3 border-b border-gray-200">
+            <div
+                class="flex items-center border border-gray-300 rounded-full px-3 py-2 bg-gray-50 focus-within:ring-1 focus-within:ring-black transition-all duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 text-gray-500 group-focus-within:text-black transition-colors duration-300"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />
+                </svg>
+                <input type="text" name="q" placeholder="Cari produk..."
+                    class="ml-2 outline-none text-sm bg-transparent w-full h-6">
+            </div>
+        </form>
+
         <ul class="flex flex-col px-6 py-4 space-y-3 text-gray-700 font-medium">
             <li><a href="/" class="block py-1 hover:text-black transition">Home</a></li>
             <li><a href="/produk" class="block py-1 hover:text-black transition">Produk</a></li>
             <li><a href="/tentang" class="block py-1 hover:text-black transition">Tentang</a></li>
+
+            <div class="pt-4 border-t border-gray-200 flex flex-col space-y-3">
+                @auth
+                    {{-- <div class="px-5 py-2 text-center text-sm font-medium text-gray-700">
+                        Halo, {{ Auth::user()->name }}!
+                    </div> --}}
+                    <!-- Tombol Keranjang di Mobile -->
+                    <a href="/keranjang"
+                        class="flex items-center justify-center gap-2 border border-gray-300 text-black px-5 py-2 rounded-full text-center text-sm font-semibold hover:bg-gray-100 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-black" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.5 7h13l-1.5-7M9 21a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z" />
+                        </svg>
+                        Keranjang
+                    </a>
+                    <a href="/profile"
+                        class="border border-gray-300 text-black px-5 py-2 rounded-full text-center text-sm font-semibold hover:bg-gray-100 transition">Profile</a>
+                    <a href="/orders"
+                        class="border border-gray-300 text-black px-5 py-2 rounded-full text-center text-sm font-semibold hover:bg-gray-100 transition">Pesanan
+                        Saya</a>
+                    <form method="POST" action="/logout" class="block">
+                        @csrf
+                        <button type="submit"
+                            class="w-full bg-red-600 text-white px-5 py-2 rounded-full text-center text-sm font-semibold hover:bg-red-700 transition">Logout</button>
+                    </form>
+                @else
+                    <a href="/login"
+                        class="bg-black text-white px-5 py-2 rounded-full text-center text-sm font-semibold hover:bg-gray-800 transition">Login</a>
+                    <a href="/register"
+                        class="border border-black text-black px-5 py-2 rounded-full text-center text-sm font-semibold hover:bg-black hover:text-white transition">Daftar</a>
+                @endauth
+
+            </div>
         </ul>
     </div>
 </nav>
 
-
 @push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const menuBtn = document.getElementById('menu-btn');
+                const mobileMenu = document.getElementById('mobile-menu');
+                const line1 = document.getElementById('burger-line-1');
+                const line2 = document.getElementById('burger-line-2');
+                const line3 = document.getElementById('burger-line-3');
 
-            const menuBtn = document.getElementById('menu-btn');
-            const mobileMenu = document.getElementById('mobile-menu');
-
-            const line1 = document.getElementById('burger-line-1');
-            const line2 = document.getElementById('burger-line-2');
-            const line3 = document.getElementById('burger-line-3');
-
-            if (menuBtn && mobileMenu && line1 && line2 && line3) {
                 menuBtn.addEventListener('click', () => {
-
-                    const isOpening = mobileMenu.classList.contains('max-h-0');
-
-                    if (isOpening) {
-                        // Buka Menu
+                    const isClosed = mobileMenu.classList.contains('max-h-0');
+                    if (isClosed) {
+                        // Buka menu
                         mobileMenu.classList.remove('max-h-0', 'opacity-0', 'invisible');
-                        mobileMenu.classList.add('max-h-96', 'opacity-100', 'visible');
-                        // Animasi Ikon Burger -> X
-                        line1.classList.add('rotate-45',
-                            'translate-y-[8px]'); // Sesuaikan translate-y jika perlu
-                        line2.classList.add('opacity-0');
-                        line3.classList.add('-rotate-45',
-                            '-translate-y-[8px]'); // Sesuaikan translate-y jika perlu
+                        mobileMenu.classList.add('max-h-[80vh]', 'overflow-y-auto', 'opacity-100', 'visible');
+                        document.body.style.overflow = 'auto'; // Izinkan scroll
 
+                        // Animasi ikon burger → silang
+                        line1.classList.add('rotate-45', 'translate-y-[8px]');
+                        line2.classList.add('opacity-0');
+                        line3.classList.add('-rotate-45', '-translate-y-[8px]');
                     } else {
-                        // Tutup Menu
-                        mobileMenu.classList.remove('max-h-96', 'opacity-100', 'visible');
+                        // Tutup menu
+                        mobileMenu.classList.remove('max-h-[80vh]', 'overflow-y-auto', 'opacity-100',
+                            'visible');
                         mobileMenu.classList.add('max-h-0', 'opacity-0', 'invisible');
-                        // Animasi Ikon X -> Burger
+                        document.body.style.overflow = ''; // Kembalikan scroll normal
+
+                        // Animasi silang → burger
                         line1.classList.remove('rotate-45', 'translate-y-[8px]');
                         line2.classList.remove('opacity-0');
                         line3.classList.remove('-rotate-45', '-translate-y-[8px]');
                     }
                 });
-            } else {
-                console.error('Elemen menu mobile atau burger lines tidak ditemukan.');
-            }
 
-            // --- SCRIPT: User Dropdown Menu ---
-            const userMenuButton = document.getElementById('user-menu-button');
-            const userDropdown = document.getElementById('user-dropdown');
-            const dropdownArrow = document.getElementById('dropdown-arrow');
+                // User dropdown
+                const userMenuButton = document.getElementById('user-menu-button');
+                const userDropdown = document.getElementById('user-dropdown');
+                const dropdownArrow = document.getElementById('dropdown-arrow');
 
-            if (userMenuButton && userDropdown && dropdownArrow) {
-                userMenuButton.addEventListener('click', (e) => {
-                    e.stopPropagation();
+                if (userMenuButton && userDropdown) {
+                    userMenuButton.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const open = userDropdown.classList.contains('opacity-100');
+                        if (open) {
+                            userDropdown.classList.remove('opacity-100', 'visible');
+                            userDropdown.classList.add('opacity-0', 'invisible');
+                            dropdownArrow.classList.remove('rotate-180');
+                        } else {
+                            userDropdown.classList.remove('opacity-0', 'invisible');
+                            userDropdown.classList.add('opacity-100', 'visible');
+                            dropdownArrow.classList.add('rotate-180');
+                        }
+                    });
 
-                    const isOpen = userDropdown.classList.contains('opacity-100');
+                    document.addEventListener('click', (e) => {
+                        if (!userMenuButton.contains(e.target) && !userDropdown.contains(e.target)) {
+                            userDropdown.classList.remove('opacity-100', 'visible');
+                            userDropdown.classList.add('opacity-0', 'invisible');
+                            dropdownArrow.classList.remove('rotate-180');
+                        }
+                    });
+                }
 
-                    if (isOpen) {
-                        // Tutup dropdown
-                        userDropdown.classList.remove('opacity-100', 'visible');
-                        userDropdown.classList.add('opacity-0', 'invisible');
-                        dropdownArrow.classList.remove('rotate-180');
-                    } else {
-                        // Buka dropdown
-                        userDropdown.classList.remove('opacity-0', 'invisible');
-                        userDropdown.classList.add('opacity-100', 'visible');
-                        dropdownArrow.classList.add('rotate-180');
-                    }
-                });
-
-                // Tutup dropdown saat klik di luar
-                document.addEventListener('click', (e) => {
-                    if (!userMenuButton.contains(e.target) && !userDropdown.contains(e.target)) {
-                        userDropdown.classList.remove('opacity-100', 'visible');
-                        userDropdown.classList.add('opacity-0', 'invisible');
-                        dropdownArrow.classList.remove('rotate-180');
-                    }
-                });
-            }
-
-            // --- SCRIPT: Animasi Navbar Scroll ---
-            const navbar = document.getElementById('main-navbar');
-            if (navbar) {
+                // Navbar shadow saat scroll
+                const navbar = document.getElementById('main-navbar');
                 window.addEventListener('scroll', () => {
                     if (window.scrollY > 10) {
-                        // Saat di-scroll ke bawah, ganti shadow
                         navbar.classList.add('shadow-lg');
                         navbar.classList.remove('shadow-sm');
                     } else {
-                        // Saat di paling atas, kembalikan shadow
                         navbar.classList.add('shadow-sm');
                         navbar.classList.remove('shadow-lg');
                     }
                 });
-            } else {
-                console.error('Elemen navbar utama tidak ditemukan.');
-            }
-        });
-    </script>
+            });
+        </script>
+    @endpush
 @endpush

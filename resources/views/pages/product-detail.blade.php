@@ -87,22 +87,6 @@
                         </p>
                     </div>
 
-                    <!-- Color Selection -->
-                    <div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-3">Color</h3>
-                        <div class="flex space-x-3">
-                            @foreach([
-                                ['name' => 'Black/White', 'code' => 'bg-gradient-to-r from-black to-white'],
-                                ['name' => 'Blue/White',  'code' => 'bg-gradient-to-r from-blue-500 to-white'],
-                                ['name' => 'Red/White',   'code' => 'bg-gradient-to-r from-red-500 to-white'],
-                            ] as $index => $color)
-                            <button onclick="selectColor('{{ $color['name'] }}')" 
-                                    class="color-option w-12 h-12 rounded-full border-2 {{ $index === 0 ? 'border-blue-500' : 'border-gray-300' }} hover:border-blue-500 transition {{ $color['code'] }}"></button>
-                            @endforeach
-                        </div>
-                        <p class="text-sm text-gray-600 mt-2">Selected: <span id="selectedColor">Black/White</span></p>
-                    </div>
-
                     <!-- Quantity -->
                     <div>
                         <h3 class="text-lg font-semibold text-gray-900 mb-3">Quantity</h3>

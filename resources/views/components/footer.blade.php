@@ -37,7 +37,7 @@
                 <ul class="space-y-2">
                     <li><a href="/" class="text-gray-300 hover:text-white transition">Home</a></li>
                     <li><a href="/produk" class="text-gray-300 hover:text-white transition">Produk</a></li>
-                    <li><a href="/tentang-kami" class="text-gray-300 hover:text-white transition">Tentang Kami</a></li>
+                    <li><a href="/tentang" class="text-gray-300 hover:text-white transition">Tentang Kami</a></li>
                 </ul>
             </div>
 
