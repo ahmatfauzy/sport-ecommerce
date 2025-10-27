@@ -29,6 +29,7 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gambar</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Slug</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah Produk</th>
@@ -39,6 +40,17 @@
                     <tbody class="bg-white divide-y divide-gray-200">
                         @forelse($categories as $category)
                         <tr class="hover:bg-gray-50" id="category-row-{{ $category->id }}">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="w-16 h-16 rounded-lg overflow-hidden">
+                                    @if($category->image_url)
+                                    <img src="{{ $category->image_url }}" alt="{{ $category->name }}" class="w-full h-full object-cover">
+                                    @else
+                                    <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                                        <span class="text-gray-400">No image</span>
+                                    </div>
+                                    @endif
+                                </div>
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="text-sm font-medium text-gray-900">{{ $category->name }}</div>
                             </td>
@@ -82,7 +94,7 @@
                 <h3 id="modalTitle" class="text-lg font-medium text-gray-900">Add New Category</h3>
             </div>
 
-            <form id="categoryForm" class="p-6" action="/admin/categories" method="POST">
+            <form id="categoryForm" class="p-6" action="/admin/categories" method="POST" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" id="formMethod" name="_method" value="POST">
                 <div class="mb-4">
@@ -90,10 +102,33 @@
                     <input type="text" id="categoryName" name="name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black" required>
                 </div>
 
-                <div class="mb-6">
+                <div class="mb-4">
                     <label for="categorySlug" class="block text-sm font-medium text-gray-700 mb-2">Slug</label>
                     <input type="text" id="categorySlug" name="slug" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black">
                     <p class="text-xs text-gray-500 mt-1">Slug akan otomatis dibuat dari nama</p>
+                </div>
+
+                <div class="mb-6">
+                    <label for="categoryImage" class="block text-sm font-medium text-gray-700 mb-2">Gambar Kategori</label>
+                    <div class="mt-1 flex items-center">
+                        <div id="imagePreview" class="w-24 h-24 rounded-lg overflow-hidden bg-gray-100 mr-4 hidden">
+                            <img id="previewImg" src="" alt="Preview" class="w-full h-full object-cover">
+                        </div>
+                        <label class="w-full flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md cursor-pointer hover:border-gray-400">
+                            <div class="space-y-1 text-center">
+                                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <div class="flex text-sm text-gray-600">
+                                    <span class="relative bg-white rounded-md font-medium text-black hover:text-gray-900">
+                                        Upload gambar
+                                    </span>
+                                </div>
+                                <p class="text-xs text-gray-500">PNG, JPG, GIF up to 2MB</p>
+                            </div>
+                            <input id="categoryImage" name="image" type="file" class="sr-only" accept="image/*">
+                        </label>
+                    </div>
                 </div>
 
                 <div class="flex justify-end space-x-3">
@@ -119,6 +154,8 @@
         document.getElementById('categoryForm').reset();
         document.getElementById('categoryForm').action = '/admin/categories';
         document.getElementById('formMethod').value = 'POST';
+        document.getElementById('imagePreview').classList.add('hidden');
+        document.getElementById('previewImg').src = '';
         document.getElementById('categoryModal').classList.remove('hidden');
     }
 
@@ -130,6 +167,16 @@
         document.getElementById('categoryForm').action = `/admin/categories/${id}`;
         document.getElementById('formMethod').value = 'PUT';
         document.getElementById('categoryModal').classList.remove('hidden');
+
+        // Check if category has an image and show preview
+        const categoryImage = document.querySelector(`#category-row-${id} img`);
+        if (categoryImage && categoryImage.src) {
+            document.getElementById('imagePreview').classList.remove('hidden');
+            document.getElementById('previewImg').src = categoryImage.src;
+        } else {
+            document.getElementById('imagePreview').classList.add('hidden');
+            document.getElementById('previewImg').src = '';
+        }
     }
 
     function closeModal() {
@@ -227,6 +274,22 @@
                 console.error('Error:', error);
                 alert((error && error.message) || 'Terjadi kesalahan');
             });
+    });
+
+    // Handle image preview
+    document.getElementById('categoryImage').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('imagePreview').classList.remove('hidden');
+                document.getElementById('previewImg').src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        } else {
+            document.getElementById('imagePreview').classList.add('hidden');
+            document.getElementById('previewImg').src = '';
+        }
     });
 
     // Close modal when clicking outside
